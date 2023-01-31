@@ -1,0 +1,4 @@
+name = "ClapeyronGCIdentifier"
+uuid = "b7ea765e-cbac-4e4a-9b0d-5427cc302506"
+authors = ["Hon Wa Yew <yewhonwa@gmail.com>", "Pierre Walker <pwalker@mit.edu>", "Andrés Riedemann <andres.riedemann@gmail.com>"]
+version = "0.1.0"
