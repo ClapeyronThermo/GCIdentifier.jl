@@ -1,0 +1,34 @@
+SAFTgammaMieGroups = [raw"[CX4H3]" "CH3";
+raw"[!R;CX4H2]" "CH2";
+raw"[!R;CX4H]" "CH";
+raw"[!R;CX4H0]" "C";
+raw"[cX3;H1]" "aCH";
+raw"[cX3;H0][CX4;H2]" "aCCH2";
+raw"[cX3;H0][CX4;H1]" "aCCH";
+raw"[CX3H2]" "CH2=";
+raw"[!R;CX3H1;!$([CX3H1](=O))]" "CH=";
+raw"[CH2;R]" "cCH2";
+raw"[OX2H]-[C]=O" "COOH";
+raw"[#6X3H0;!$([#6X3H0](~O)(~O)(~O))](=[#8X1])[#8X2H0]" "COO";
+raw"[OX2H;!$([OX2H]-[#6]=[O]);!$([OX2H]-a)]" "OH";
+raw"[CX4;H2;!R][OH1]" "CH2OH";
+raw"[CX4;H1;!R][OH1]" "CHOH";
+raw"[NX3H2]" "NH2";
+raw"[NX3H1;!R]" "NH";
+raw"[#7X3H0;!$([#7](~O)~O)]" "N";
+raw"[#7X3H1;R]" "cNH";
+raw"[#7X3H0;R]" "cN";
+raw"[!R;CX3H0;!$([CX3H0](=O))]" "CH=";
+raw"[cX3;H0][CX4;H3]" "aCCH3";
+raw"[cX3;H0;R][OX2;H1]" "aCOH";
+raw"[CH1;R]" "cCH";
+raw"[CH1;R][NH1;!R]" "cCHNH";
+raw"[CH1;R][NH0;!R]" "cCHN";
+raw"[cH0][C;!R](=O)[cH0]" "aCCOaC";
+raw"[OX2H]-[C](=O)[cH0]" "aCCOOH";
+raw"[cH0][NH1;!R][cH0]" "aCNHaC";
+raw"[CH3][CX3](=O)" "CH3CO";
+raw"[OH0;!R;$([OH0;!R][CH3;!R]);$([OH0;!R][CH2;!R])]" "eO";
+raw"[OH0;!R;$([OH0;!R][CH2;!R])]" "cO"]
+
+export SAFTgammaMieGroups
