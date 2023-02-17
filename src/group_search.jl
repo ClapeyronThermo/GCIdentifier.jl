@@ -1,10 +1,15 @@
-function get_groups_from_name(component::String,groups::Array{String})
+function get_groups_from_name(component::String,groups::Array{String};connectivity=false)
     res = search_chemical(component)
-    (smiles,groups_found) = get_groups_from_smiles(res.smiles,groups)
-    return (component,groups_found)
+    if connectivity == true
+        (smiles,groups_found,connectivity) = get_groups_from_smiles(res.smiles,groups;connectivity=connectivity)
+        return (component,groups_found,connectivity)
+    else
+        (smiles,groups_found) = get_groups_from_smiles(res.smiles,groups;connectivity=connectivity)
+        return (component,groups_found)
+    end
 end
 
-function get_groups_from_smiles(smiles::String,groups::Array{String})
+function get_groups_from_smiles(smiles::String,groups::Array{String};connectivity=false)
     mol = get_mol(smiles)
     mol_list = get_substruct_matches(mol,mol)
     
@@ -100,11 +105,43 @@ function get_groups_from_smiles(smiles::String,groups::Array{String})
     end
     
     if !(sum(atoms_list .∈ [atoms])==length(atoms))
-        @warn "Could not find all groups for"*smiles
+        error("Could not find all groups for "*smiles)
     end
-    
-    return (smiles,[groups[group_id[i],2] => group_occ_list[i] for i in 1:length(group_id)])
+
+    if connectivity == true
+        connectivity = get_connectivity(mol,group_id,groups)
+        return (smiles,[groups[group_id[i],2] => group_occ_list[i] for i in 1:length(group_id)],connectivity)
+    else
+        return (smiles,[groups[group_id[i],2] => group_occ_list[i] for i in 1:length(group_id)])
+    end
 end
 
+function get_connectivity(mol,group_id,groups)
+    ngroups = length(group_id)
+    A = zeros(ngroups,ngroups)
+    connectivity = []
+    for i in 1:ngroups
+        smart1 = groups[group_id[i],1]
+        smart2 = groups[group_id[i],1]
+        querie = get_qmol(smart1*smart2)
+        smatch = get_substruct_matches(mol,querie)
+        
+        A[i,i] = length(smatch)
+        if A[i,i]!=0
+            append!(connectivity,[(groups[group_id[i],2],groups[group_id[i],2])=>A[i,i]])
+        end
+        
+        for j in i+1:ngroups
+            smart2 = groups[group_id[j],1]
+            querie = get_qmol(smart1*smart2)
+            smatch = get_substruct_matches(mol,querie)
+            A[i,j] = length(smatch)
+            if A[i,j]!=0
+                append!(connectivity,[(groups[group_id[i],2],groups[group_id[j],2])=>A[i,j]])
+            end
+        end
+    end
+    return connectivity
+end
 
 export get_groups_from_name, get_groups_from_smiles
