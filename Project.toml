@@ -10,12 +10,15 @@ RDKitMinimalLib = "44044271-7623-48dc-8250-42433c44e4b7"
 
 [weakdeps]
 Clapeyron = "7c7805af-46cc-48c9-995b-ed0ed2dc909a"
+ChemicalIdentifiers = "fa4ea961-1416-484e-bda2-883ee1634ba5"
 
 [extensions]
 GCIdentifierClapeyronExt = "Clapeyron"
+GCIdentifierChemicalIdentifiersExt = "ChemicalIdentifiers"
 
 [compat]
 Clapeyron = "0.4"
+
 
 [extras]
 Clapeyron = "7c7805af-46cc-48c9-995b-ed0ed2dc909a"

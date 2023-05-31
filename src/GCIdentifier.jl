@@ -1,5 +1,5 @@
 module GCIdentifier
-using RDKitMinimalLib, ChemicalIdentifiers
+using RDKitMinimalLib
 
 @static if !isdefined(Base,:eachsplit)
     eachsplit(str::AbstractString, dlm; limit::Integer=0, keepempty::Bool=true) = split(str,dlm;limit,keepempty)
@@ -12,8 +12,12 @@ split_2(str,dlm) = NTuple{2}(eachsplit(str,dlm, limit=2))
 include("group_search.jl")
 include("database/database.jl")
 
+function get_groups_from_name end #overload this if ChemicalIdentifiers is loaded.
+
 if !isdefined(Base,:get_extension)
-    using Clapeyron
+    using Clapeyron,ChemicalIdentifiers
     include("../ext/GCIdentifierClapeyronExt.jl")
+    include("../ext/GCIdentifierChemicalIdentifiersExt.jl")
 end
+
 end # module
