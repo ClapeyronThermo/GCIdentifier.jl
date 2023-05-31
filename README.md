@@ -1,2 +1,5 @@
-# ClapeyronGCIdentifier
-identifies subgroups, given a SMILES
+# GCIdentifier
+
+identifies subgroups, given a SMILES.
+
+A l
