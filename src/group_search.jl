@@ -78,7 +78,6 @@ function get_groups_from_smiles(smiles::String,groups::Vector{GCPair};connectivi
     smatches_idx = smatches_idx[perm]
     possible_groups = possible_groups[perm]
 
-    @show name.(possible_groups)
     #TODO: identify overlapped groups here?
 
     for (idx,smatch) in pairs(smatches)
