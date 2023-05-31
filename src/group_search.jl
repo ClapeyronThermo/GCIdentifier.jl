@@ -72,8 +72,15 @@ function get_groups_from_smiles(smiles::String,groups::Vector{GCPair};connectivi
         end
     end
 
+    #step 0.b, sort the matches by the amount of matched atoms. biggest groups come first.
+    perm = sortperm(smatches,by = x -> sum(length(xi["atoms"]) for xi in x),rev = true)
+    smatches = smatches[perm]
+    smatches_idx = smatches_idx[perm]
+    possible_groups = possible_groups[perm]
 
-    
+    @show name.(possible_groups)
+    #TODO: identify overlapped groups here?
+
     for (idx,smatch) in pairs(smatches)
         i = smatches_idx[idx]
         group_i = possible_groups[idx]
@@ -100,7 +107,6 @@ function get_groups_from_smiles(smiles::String,groups::Vector{GCPair};connectivi
                     push!(group_occ_list,1)
                     append!(coverage_atoms,[smatch[j]["atoms"]])
                     append!(coverage_bonds,[smatch[j]["bonds"]])
-                    append!(atoms_list,smatch[j]["atoms"])
                 else
                     group_occ_list[end] += 1
                     append!(coverage_atoms[end],smatch[j]["atoms"])
@@ -128,17 +134,17 @@ function get_groups_from_smiles(smiles::String,groups::Vector{GCPair};connectivi
                     id_rm = group_id[id]
                     name_rm = group_list[id]
                     bond_rm =  coverage_bonds[id][coverage_bonds[id] .∈ [smatch[j]["bonds"]]]
-                    filter!(e->e ∉ overlap_atoms,atoms_list)
-                    filter!(e->e ∉ overlap_atoms,coverage_atoms[id])
+                    filter!(e -> e ∉ overlap_atoms,atoms_list)
+                    filter!(e -> e ∉ overlap_atoms,coverage_atoms[id])
                     group_occ_list[id] -= 1
 
                     # If group k no longer covers any atoms, remove it
                     if group_occ_list[id] == 0
-                        filter!(e->e ≠ 0,group_occ_list)
-                        filter!(e->!isempty(e),coverage_atoms)
+                        filter!(e-> e ≠ 0,group_occ_list)
+                        filter!(e-> !isempty(e),coverage_atoms)
                         deleteat!(coverage_bonds,id)
-                        filter!(e->e≠id_rm,group_id)
-                        filter!(e->e≠name_rm,group_list)
+                        filter!(e-> e ≠ id_rm,group_id)
+                        filter!(e-> e ≠ name_rm,group_list)
                         id -= 1 
                     end
                     ng_rm +=1
