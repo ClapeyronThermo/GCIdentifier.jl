@@ -46,7 +46,7 @@ function get_groups_from_smiles(smiles::String,groups;connectivity = false)
     return get_groups_from_smiles(smiles,groups;connectivity = connectivity)
 end
 
-function get_groups_from_smiles(smiles::String,groups::Vector{GCPair};connectivity=false)
+function get_groups_from_smiles(smiles::String,groups::Vector{GCPair};connectivity=false,check = true)
     mol = get_mol(smiles)
     mol_list = get_substruct_matches(mol,mol)
     #queries = get_qmol.(smarts.(groups))
@@ -57,15 +57,15 @@ function get_groups_from_smiles(smiles::String,groups::Vector{GCPair};connectivi
     atoms_list = Int[]
     coverage_atoms = []
     coverage_bonds = []
-    
+
     smatches = []
     smatches_idx = Int[]
     possible_groups = GCPair[]
-    
+
     #step 0.a, find all groups that could get a match
     for i in 1:length(groups)
         query_i = get_qmol(smarts(groups[i]))
-        if !isempty(get_substruct_match(mol,query_i)) 
+        if !isempty(get_substruct_match(mol,query_i))
             push!(smatches,get_substruct_matches(mol,query_i))
             push!(smatches_idx,i)
             push!(possible_groups,groups[i])
@@ -85,7 +85,7 @@ function get_groups_from_smiles(smiles::String,groups::Vector{GCPair};connectivi
         group_i = possible_groups[idx]
         smarts_i = smarts(group_i)
         for j in 1:length(smatch)
-            
+
             #add first match.
             if isempty(atoms_list)
                 push!(group_list,smarts_i)
@@ -97,8 +97,8 @@ function get_groups_from_smiles(smiles::String,groups::Vector{GCPair};connectivi
                 continue #go to next iteration
             end
 
-            # If no atoms covered by this group are already covered by other groups            
-            if sum(smatch[j]["atoms"] .∈ [atoms_list]) == 0 
+            # If no atoms covered by this group are already covered by other groups
+            if sum(smatch[j]["atoms"] .∈ [atoms_list]) == 0
                 append!(atoms_list,smatch[j]["atoms"])
                 if !(smarts_i in group_list)
                     push!(group_list,smarts_i)
@@ -113,7 +113,7 @@ function get_groups_from_smiles(smiles::String,groups::Vector{GCPair};connectivi
                 end
                 continue
             end
-            
+
             # Check which groups group i has an overlap with
             id = 0
             ng_rm = 0
@@ -124,8 +124,8 @@ function get_groups_from_smiles(smiles::String,groups::Vector{GCPair};connectivi
                 sum(smatch[j]["atoms"] .∈ [coverage_atoms[id]]) <= 0 && continue
 
                 # We only care if group i covers _more_ atoms than group k
-                if ((length(smatch[j]["atoms"])>length(coverage_atoms[id])) & 
-                    # Also make sure that group i covers all the atoms of group k 
+                if ((length(smatch[j]["atoms"])>length(coverage_atoms[id])) &
+                    # Also make sure that group i covers all the atoms of group k
                     (sum(smatch[j]["atoms"] .∈ [coverage_atoms[id]]).==length(coverage_atoms[id]))) |
                     (length(smatch[j]["bonds"])>length(coverage_bonds[id]))
                     # find out which atoms are covered
@@ -144,10 +144,10 @@ function get_groups_from_smiles(smiles::String,groups::Vector{GCPair};connectivi
                         deleteat!(coverage_bonds,id)
                         filter!(e-> e ≠ id_rm,group_id)
                         filter!(e-> e ≠ name_rm,group_list)
-                        id -= 1 
+                        id -= 1
                     end
                     ng_rm +=1
-                end     
+                end
             end
 
             ng_rm == 0 && continue
@@ -167,13 +167,15 @@ function get_groups_from_smiles(smiles::String,groups::Vector{GCPair};connectivi
             end
         end
     end
-    
-    #if !(sum(atoms_list .∈ [atoms])==length(atoms))
-    #    error("Could not find all groups for "*smiles)
-    #end
+
+    if check
+        if !(sum(atoms_list .∈ [atoms])==length(atoms))
+            error("Could not find all groups for "*smiles)
+        end
+    end
 
     gcpairs = [name(groups[group_id[i]]) => group_occ_list[i] for i in 1:length(group_id)]
-    
+
     if connectivity
         return (smiles,gcpairs,get_connectivity(mol,group_id,groups))
     else
@@ -197,7 +199,7 @@ function get_connectivity(mol,group_id,groups,connectivity = false)
         if A[i,i]!=0
             append!(connectivity,[(name_i,name_i)=>Int(A[i,i])])
         end
-        
+
         for j in i+1:ngroups
             gcj = groups[group_id[j]]
             smart2 = smarts(gcj)
