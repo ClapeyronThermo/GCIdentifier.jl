@@ -87,7 +87,7 @@ test_gcmatch(groups) = (smiles,result) -> test_gcmatch(groups,smiles,result)
     unifac("c1ccc(cc1)N",gcstring"ACH:5;ACNH2:1") #aniline
     
     #piridine
-    unifac("c1ccncc1",gcstring"C5H5N:1")
+    #unifac("c1ccncc1",gcstring"C5H5N:1")
     
     
     

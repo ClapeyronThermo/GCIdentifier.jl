@@ -13,7 +13,43 @@ end
 smarts(x::GCPair) = x.smarts
 name(x::GCPair) = x.name
 
+#
 
+#sorting comparison between 2 smatches
+function _isless_smatch(smatch1,smatch2)
+    #fallback, if one is not matched, throw to the end
+    len_smatch1 = length(smatch1)
+    len_smatch2 = length(smatch1)
+    if len_smatch1 == 0 || len_smatch2 == 0
+        return len_smatch1 < len_smatch2
+    end
+
+    #first criteria: bigger groups go first,
+    #the group with the bigger group
+    atom_size1 = length(smatch1[1]["atoms"])
+    atom_size2 = length(smatch2[1]["atoms"])
+    if atom_size1 != atom_size2
+        return atom_size1 < atom_size2
+    end
+
+    #second criteria
+    #if the size of the match is the same,
+    #return the one with the least amount of matches first
+    if len_smatch1 != len_smatch2
+        len_smatch1 > len_smatch2
+    end
+
+    #third criteria
+    #return the match with more bonds
+    bond_count1 = length(smatch1[1]["bonds"])
+    bond_count2 = length(smatch2[1]["bonds"])
+    if bond_count1 != bond_count2
+        return bond_count1 < bond_count2
+    end
+
+    #no more comparizons?
+    return false
+end
 
 """
     get_grouplist(x)
@@ -73,7 +109,7 @@ function get_groups_from_smiles(smiles::String,groups::Vector{GCPair};connectivi
     end
 
     #step 0.b, sort the matches by the amount of matched atoms. biggest groups come first.
-    perm = sortperm(smatches,by = x -> sum(length(xi["atoms"]) for xi in x),rev = true)
+    perm = sortperm(smatches,lt = _isless_smatch,rev = true)
     smatches = smatches[perm]
     smatches_idx = smatches_idx[perm]
     possible_groups = possible_groups[perm]
