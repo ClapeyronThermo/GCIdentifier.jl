@@ -13,8 +13,6 @@ end
 smarts(x::GCPair) = x.smarts
 name(x::GCPair) = x.name
 
-#
-
 #sorting comparison between 2 smatches
 function _isless_smatch(smatch1,smatch2)
     #fallback, if one is not matched, throw to the end
@@ -84,7 +82,7 @@ end
 
 function get_groups_from_smiles(smiles::String,groups::Vector{GCPair},lib =DEFAULTLIB;connectivity=false,check = true)
     mol = get_mol(lib,smiles)
-    
+    __bonds = __getbondlist(lib,mol)
     group_list = Int[]
     group_id = Int[]
     group_occ_list = Int[]
@@ -99,7 +97,7 @@ function get_groups_from_smiles(smiles::String,groups::Vector{GCPair},lib =DEFAU
     for i in 1:length(groups)
         query_i = get_qmol(lib,smarts(groups[i]))
         if has_substruct_match(lib,mol,query_i)
-            push!(smatches,get_substruct_matches(lib,mol,query_i))
+            push!(smatches,get_substruct_matches(lib,mol,query_i,__bonds))
             push!(smatches_idx,i)
         end
     end
