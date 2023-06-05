@@ -59,13 +59,17 @@ function get_grouplist end
 get_grouplist(x::Vector{GCPair}) = x
 
 """
-    get_groups_from_smiles(smiles::String,groups;connectivity = false)
+    get_groups_from_smiles(smiles::String,groups,lib = GCIdentifier.DEFAULTLIB;connectivity = false)
 
 Given a SMILES string and a group list (`groups::Vector{GCPair}`), returns a list of groups and their corresponding amount.
 
 If `connectivity` is true, then it will additionally return a vector containing the amount of bonds between each pair.
 
-## Example
+`lib` allows the selection of a molecular library to perform the substructure matching. the two available options are:
+- `RDKitLib()` : uses `RDKit` (via the `RDKitMinimalLib.jl` package) to perform the substructure matching. Default in Linux and Mac.
+- `MolecularGraphJL()` : uses `MolecularGraph.jl`to perform the substructure matching. Default in Windows (due to a bug in RDKit in this particular Operating System).
+
+## Examples
 
 ```julia
 julia> get_groups_from_smiles("CCO",UNIFACGroups)
