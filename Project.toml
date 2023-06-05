@@ -20,6 +20,7 @@ GCIdentifierClapeyronExt = "Clapeyron"
 [compat]
 Clapeyron = "0.4"
 MolecularGraph = "0.14"
+RDKitMinimalLib = "1"
 
 [extras]
 Clapeyron = "7c7805af-46cc-48c9-995b-ed0ed2dc909a"
