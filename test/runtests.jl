@@ -4,7 +4,7 @@ using GCIdentifier: @gcstring_str
 
 function test_gcmatch(groups,smiles,result)
     evaluated_rdkit = Set(get_groups_from_smiles(smiles,groups,RDKitLib(),check = false)[2])
-    evaluated_molgraphJL = Set(get_groups_from_smiles(smiles,MolecularGraphJL(),groups,check = false)[2])
+    evaluated_molgraphJL = Set(get_groups_from_smiles(smiles,groups,MolecularGraphJL(),check = false)[2])
     reference = Set(result)
     @test isequal(evaluated_rdkit,reference)
     @test isequal(evaluated_molgraphJL,reference)
