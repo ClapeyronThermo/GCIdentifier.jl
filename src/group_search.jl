@@ -269,4 +269,32 @@ macro gcstring_str(str)
     res
 end
 
+function group_postprocess(grouplist,keys...)
+    res = Dict{String,Int}(grouplist)
+    
+    for (k,v) in keys
+        if haskey(res,k)
+            multiplier = res[k]
+            @show multiplier
+            res[k] = 0
+            if v isa Pair
+                v = (v,)
+            end
+            for vals in v
+                knew = first(vals)
+                vnew = last(vals)
+                @show (knew,vnew)
+                res[knew] = vnew*multiplier
+            end
+        end
+    end
+    @show res
+    for kk in keys(res)
+        if res[kk] == 0
+            delete!(res,kk)
+        end
+    end
+    return [k => v for (k,v) in pairs(res)]
+
+end
 export get_groups_from_name, get_groups_from_smiles
