@@ -18,6 +18,7 @@ GCIdentifierChemicalIdentifiersExt = "ChemicalIdentifiers"
 GCIdentifierClapeyronExt = "Clapeyron"
 
 [compat]
+ChemicalIdentifiers = "0.1"
 Clapeyron = "0.4"
 MolecularGraph = "0.14"
 RDKitMinimalLib = "1"
