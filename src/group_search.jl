@@ -49,6 +49,32 @@ function _isless_smatch(smatch1,smatch2)
     return false
 end
 
+function unique_groups!(groups)
+    n = length(groups)
+    counts = zeros(Int,n)
+    to_delete = fill(false,n)
+    #step 1: find uniques and group those
+    for i in 1:(n-1)
+        str,val =groups[i]
+        counts[i] = val
+        for j in (i+1):n
+            str2,vals2 = groups[j]
+            if str2 == str && !to_delete[j]
+                to_delete[j] = true
+                counts[i] += vals2
+                counts[j] = 0
+            end
+        end
+    end
+    #step 2: set new values
+    for i in 1:n
+        str,val =groups[i]
+        groups[i] = str => counts[i]
+    end
+    #step 3: delete groups with zero values
+    return deleteat!(groups,to_delete)
+end
+
 """
     get_grouplist(x)
 
@@ -153,7 +179,7 @@ function get_groups_from_smiles(smiles::String,groups::Vector{GCPair},lib =DEFAU
                 # Does group 1 cover any atoms of group id
                 in_coverage_j = count(in(coverage_atoms[id]), smatch[j]["atoms"])
                 in_coverage_j == 0 && continue
-                
+
                 # We only care if group i covers _more_ atoms than group k
                 length(smatch[j]["atoms"]) < length(coverage_atoms[id]) && continue
 
@@ -209,7 +235,7 @@ function get_groups_from_smiles(smiles::String,groups::Vector{GCPair},lib =DEFAU
     end
 
     gcpairs = [name(groups[group_id[i]]) => group_occ_list[i] for i in 1:length(group_id)]
-
+    unique_groups!(gcpairs)
     if connectivity
         return (smiles,gcpairs,get_connectivity(mol,group_id,groups,lib))
     else
@@ -286,7 +312,7 @@ groups2 = group_replace(groups1[2],"OH(P)" => ("OH" => 1), "CH3" => [("C" => 1),
 """
 function group_replace(grouplist,group_keys...)
     res = Dict{String,Int}(grouplist)
-    
+
     for (k,v) in group_keys
         if haskey(res,k)
             multiplier = res[k]
@@ -297,11 +323,16 @@ function group_replace(grouplist,group_keys...)
             for vals in v
                 knew = first(vals)
                 vnew = last(vals)
-                res[knew] = vnew*multiplier
+                if haskey(res,knew)
+                    val_old = res[knew]
+                    res[knew] = val_old + vnew*multiplier
+                else
+                    res[knew] = vnew*multiplier
+                end
             end
         end
     end
-    
+
     for kk in keys(res)
         if res[kk] == 0
             delete!(res,kk)
