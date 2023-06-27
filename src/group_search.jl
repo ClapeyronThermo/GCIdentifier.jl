@@ -235,7 +235,7 @@ function get_groups_from_smiles(smiles::String,groups::Vector{GCPair},lib =DEFAU
     end
 
     gcpairs = [name(groups[group_id[i]]) => group_occ_list[i] for i in 1:length(group_id)]
-    unique_groups!(gcpairs)
+    #unique_groups!(gcpairs) FIXME
     if connectivity
         return (smiles,gcpairs,get_connectivity(mol,group_id,groups,lib))
     else
