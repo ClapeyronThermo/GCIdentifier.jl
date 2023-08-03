@@ -19,7 +19,7 @@ GCIdentifierClapeyronExt = "Clapeyron"
 
 [compat]
 ChemicalIdentifiers = "0.1"
-Clapeyron = "0.4"
+Clapeyron = "0.4,0.5"
 MolecularGraph = "0.14,0.15"
 RDKitMinimalLib = "1"
 
