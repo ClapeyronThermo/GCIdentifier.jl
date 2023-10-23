@@ -1,17 +1,20 @@
-gcPCSAFTgroups = [raw"[CX4H3]" "CH3";  # Already exist
-raw"[!R;CX4H2]" "CH2"; # Already exist
-raw"[!R;CX4H]" "CH"; # Already exist
-raw"[!R;CX4H0]" "C"; # Already exist
-raw"[CX3H2]" "CH2="; # Already exist
-raw"[!R;CX3H1;!$([CX3H1](=O))]" "CH="; # Already exist
-raw"[$([!R;#6X3H0]);!$([!R;#6X3H0]=[#8])]" "=C<"; # Already exist
-raw"[CX2;H1]#[CX2;H0]" "C#CH"; # Already exist
-raw"[CH2;R1;$(C1AAAA1)]" "cCH2_pen"; # Already exist
-raw"[CH1;R1;$(C1AAAA1)]" "cCH_pen"; # Already exist
-raw"[CH2;R1;$(C1AAAAA1)]" "cCH2_hex"; # Already exist
-raw"[CH1;R1;$(C1AAAAA1)]" "cCH_hex"; # Already exist
-raw"[cX3;H1]" "aCH"; # Already exist
-raw"[cX3;H0]" "aC"; # Already exist
-raw"[OX2H;!$([OX2H]-[#6]=[O]);!$([OX2H]-a)]" "OH"; # Already exist
-raw"[NX3H2]" "NH2"] # Already exist
-export gcPCSAFTgroups
+gcPCSAFTGroups = [
+    GCPair(raw"[CX4H3]", "CH3"),
+    GCPair(raw"[!R;CX4H2]", "CH2"),
+    GCPair(raw"[!R;CX4H]", "CH"),
+    GCPair(raw"[!R;CX4H0]", "C"),
+    GCPair(raw"[CX3H2]", "CH2="),
+    GCPair(raw"[!R;CX3H1;!$([CX3H1](=O))]", "CH="),
+    GCPair(raw"[$([!R;#6X3H0]);!$([!R;#6X3H0]=[#8])]", "=C<"),
+    GCPair(raw"[CX2;H1]#[CX2;H0]", "C#CH"),
+    GCPair(raw"[CH2;R1;$(C1CCCC1)]", "cCH2_pen"),
+    GCPair(raw"[CH1;R1;$(C1CCCC1)]", "cCH_pen"),
+    GCPair(raw"[CH2;R1;$(C1CCCCC1)]", "cCH2_hex"),
+    GCPair(raw"[CH1;R1;$(C1CCCCC1)]", "cCH_hex"),
+    GCPair(raw"[cX3;H1]", "aCH"),
+    GCPair(raw"[cX3;H0]", "aCH"),
+    GCPair(raw"[OX2H;!$([OX2H]-[#6]=[O]);!$([OX2H]-a)]", "OH"),
+    GCPair(raw"[NX3H2]", "NH2")
+    ]
+
+export gcPCSAFTGroups

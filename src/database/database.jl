@@ -1,4 +1,5 @@
 include("Joback.jl")
 include("SAFTgammaMie.jl")
+include("ogUNIFAC.jl")
 include("UNIFAC.jl")
 include("gcPCSAFT.jl")

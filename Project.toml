@@ -6,7 +6,26 @@ version = "0.1.0"
 [deps]
 ChemicalIdentifiers = "fa4ea961-1416-484e-bda2-883ee1634ba5"
 Clapeyron = "7c7805af-46cc-48c9-995b-ed0ed2dc909a"
+MolecularGraph = "6c89ec66-9cd8-5372-9f91-fabc50dd27fd"
 RDKitMinimalLib = "44044271-7623-48dc-8250-42433c44e4b7"
 
+[weakdeps]
+ChemicalIdentifiers = "fa4ea961-1416-484e-bda2-883ee1634ba5"
+Clapeyron = "7c7805af-46cc-48c9-995b-ed0ed2dc909a"
+
+[extensions]
+GCIdentifierChemicalIdentifiersExt = "ChemicalIdentifiers"
+GCIdentifierClapeyronExt = "Clapeyron"
+
 [compat]
-Clapeyron = "0.4.3"
+ChemicalIdentifiers = "0.1"
+Clapeyron = "0.4,0.5"
+MolecularGraph = "0.14,0.15"
+RDKitMinimalLib = "1"
+
+[extras]
+Clapeyron = "7c7805af-46cc-48c9-995b-ed0ed2dc909a"
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
