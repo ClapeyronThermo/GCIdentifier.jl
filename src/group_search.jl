@@ -118,30 +118,31 @@ end
 
 function get_connectivity(mol,group_id,groups)
     ngroups = length(group_id)
-    A = zeros(ngroups,ngroups)
-    connectivity = []
+    nbonds = []
+    pairs = []
     for i in 1:ngroups
         smart1 = groups[group_id[i],1]
         smart2 = groups[group_id[i],1]
         querie = get_qmol(smart1*smart2)
         smatch = get_substruct_matches(mol,querie)
         
-        A[i,i] = length(smatch)
-        if A[i,i]!=0
-            append!(connectivity,[(groups[group_id[i],2],groups[group_id[i],2])=>A[i,i]])
+       
+        if length(smatch)!=0
+            append!(pairs,[(groups[group_id[i],2],groups[group_id[i],2])])
+            append!(nbonds,length(smatch))
         end
         
         for j in i+1:ngroups
             smart2 = groups[group_id[j],1]
             querie = get_qmol(smart1*smart2)
             smatch = get_substruct_matches(mol,querie)
-            A[i,j] = length(smatch)
-            if A[i,j]!=0
-                append!(connectivity,[(groups[group_id[i],2],groups[group_id[j],2])=>A[i,j]])
+            if length(smatch)!=0
+                append!(pairs,[(groups[group_id[i],2],groups[group_id[j],2])])
+                append!(nbonds,length(smatch))
             end
         end
     end
-    return connectivity
+    return [pairs[i]=>nbonds[i] for i in 1:length(nbonds)]
 end
 
 export get_groups_from_name, get_groups_from_smiles

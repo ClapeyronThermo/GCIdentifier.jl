@@ -1,4 +1,4 @@
-name = "ClapeyronGCIdentifier"
+name = "GCIdentifier"
 uuid = "b7ea765e-cbac-4e4a-9b0d-5427cc302506"
 authors = ["Hon Wa Yew <yewhonwa@gmail.com>", "Pierre Walker <pwalker@mit.edu>", "Andrés Riedemann <andres.riedemann@gmail.com>"]
 version = "0.1.0"
@@ -9,4 +9,4 @@ Clapeyron = "7c7805af-46cc-48c9-995b-ed0ed2dc909a"
 RDKitMinimalLib = "44044271-7623-48dc-8250-42433c44e4b7"
 
 [compat]
-Clapeyron = "0.4"
+Clapeyron = "0.4.3"

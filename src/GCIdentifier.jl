@@ -1,4 +1,4 @@
-module ClapeyronGCIdentifier
+module GCIdentifier
 using Clapeyron
 using RDKitMinimalLib, ChemicalIdentifiers
 
