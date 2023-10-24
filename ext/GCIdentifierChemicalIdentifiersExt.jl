@@ -1,16 +1,16 @@
 module GCIdentifierChemicalIdentifiersExt
 
-if !isdefined(Base,:get_extension)
-    using ChemicalIdentifiers
-    using GCIdentifier
-else
-    using ..ChemicalIdentifiers
-    using ..GCIdentifier
-end
+using ChemicalIdentifiers
+using GCIdentifier
 
 const GC = GCIdentifier
 
-function GC.get_groups_from_name(component::String,groups::Array{String},lib = GC.DEFAULTLIB;connectivity=false,check = true)
+function GC.get_groups_from_name(component::String,groups;connectivity = false)
+    groups = GC.get_grouplist(groups)
+    return GC.get_groups_from_name(component,groups,connectivity=connectivity)
+end
+
+function GC.get_groups_from_name(component::String,groups::Vector{GC.GCPair},lib = GC.DEFAULTLIB;connectivity=false,check = true)
     res = search_chemical(component)
     smiles = res.smiles
     gcpairs = get_groups_from_smiles(smiles,groups,lib;connectivity=connectivity,check = check)
