@@ -1,5 +1,6 @@
 module GCIdentifier
 import RDKitMinimalLib
+using Combinatorics
 
 @static if !isdefined(Base,:eachsplit)
     eachsplit(str::AbstractString, dlm; limit::Integer=0, keepempty::Bool=true) = split(str,dlm;limit,keepempty)
