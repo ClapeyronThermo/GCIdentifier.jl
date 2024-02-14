@@ -91,4 +91,7 @@ test_gcmatch(groups) = (smiles,result) -> test_gcmatch(groups,smiles,result)
     #furfural
     unifac("c1cc(oc1)C=O",gcstring"FURFURAL:1") #furfural
 
+    #non-unique group assignment
+    unifac("c1ccccc1COCCOCC",gcstring"ACH:5;ACCH2:1;CH2O:2;CH2:1;CH3:1") #phenol + diethylene glycol
+
 end
