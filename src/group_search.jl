@@ -154,31 +154,33 @@ function get_groups_from_smiles(smiles::String,groups::Vector{GCPair},lib =DEFAU
     overlap_groups = findall(sum(bond_mat[:, overlap], dims=2)[:] .> 0)
     non_overlap_groups = findall(sum(bond_mat[:, overlap], dims=2)[:] .== 0)
 
-    # Reduce the bond_mat to only the overlapping atoms
-    bond_mat_overlap = bond_mat[overlap_groups, overlap]
+    if !isempty(overlap)
+        # Reduce the bond_mat to only the overlapping atoms
+        bond_mat_overlap = bond_mat[overlap_groups, overlap]
 
-    # Generate all possible combinations of groups which cover all atoms
-    candidate = []
-    for i in 2:size(bond_mat_overlap, 1)
-        combs = combinations(1:size(bond_mat_overlap, 1), i)
-        for comb in combs
-            # Test if the combination of groups covers all atoms
-            if sum(bond_mat_overlap[comb, :], dims=1) == ones(Int64, 1, size(bond_mat_overlap, 2))
-                push!(candidate, comb)
+        # Generate all possible combinations of groups which cover all atoms
+        candidate = []
+        for i in 1:size(bond_mat_overlap, 1)
+            combs = combinations(1:size(bond_mat_overlap, 1), i)
+            for comb in combs
+                # Test if the combination of groups covers all atoms
+                if sum(bond_mat_overlap[comb, :], dims=1) == ones(Int64, 1, size(bond_mat_overlap, 2))
+                    push!(candidate, comb)
+                end
+            end
+            # For the first combination that covers all atoms, stop (since it will use the fewest groups)
+            if length(candidate) > 0
+                break
             end
         end
-        # For the first combination that covers all atoms, stop (since it will use the fewest groups)
-        if length(candidate) > 0
-            break
-        end
+
+        # Select the groups that cover the most atoms
+        best_comb = overlap_groups[candidate[1]]
+        push!(non_overlap_groups, best_comb...)
     end
 
-    # Select the groups that cover the most atoms
-    best_comb = overlap_groups[candidate[2]]
-    push!(best_comb, non_overlap_groups...)
-
-    bond_mat_minimum = bond_mat[best_comb, :]
-    group_id_expanded = smatches_idx_expanded[best_comb]
+    bond_mat_minimum = bond_mat[non_overlap_groups, :]
+    group_id_expanded = smatches_idx_expanded[non_overlap_groups]
 
     group_id = unique(group_id_expanded)
     group_occ_list = [sum(group_id_expanded .== i) for i in group_id]
