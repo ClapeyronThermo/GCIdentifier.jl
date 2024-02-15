@@ -19,6 +19,7 @@ GCIdentifierChemicalIdentifiersExt = "ChemicalIdentifiers"
 GCIdentifierClapeyronExt = "Clapeyron"
 
 [compat]
+julia = "1.6"
 ChemicalIdentifiers = "0.1"
 Clapeyron = "0.4,0.5"
 Combinatorics = "1"
