@@ -11,7 +11,7 @@ warnonly = Documenter.except(),
         "Home" => "index.md",
         "Background" => "background.md",
         "Basic Usage" => "basic_usage.md",        
-        "API" => "api.md")
+        "API" => "api.md"]
 
         deploydocs(;
     repo="github.com/ClapeyronThermo/GCIdentifier.jl.git",
