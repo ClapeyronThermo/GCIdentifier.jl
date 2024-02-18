@@ -8,7 +8,7 @@ Struct used to select the RDKit library (via `RDKitMinimalLib.jl` package) to pe
 struct RDKitLib end
 
 """
-    RDKitLib
+    MolecularGraphJL
 
 Struct used to select the `MolecularGraph.jl` library to perform the group search. Default in Windows.
 """

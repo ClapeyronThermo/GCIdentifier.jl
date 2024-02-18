@@ -146,7 +146,11 @@ function get_groups_from_smiles(smiles::String,groups::Vector{GCPair},lib =DEFAU
             bond_mat[i, smatches_expanded[i]["atoms"][j]+1] = 1
         end
     end
-
+    if check
+        if any(sum(bond_mat,dims=2).==0)
+            error("Could not find all groups for "*smiles)
+        end
+    end
     # Find all atoms that are in more than one group
     overlap = findall(sum(bond_mat, dims=1)[:] .> 1)
 
@@ -157,7 +161,6 @@ function get_groups_from_smiles(smiles::String,groups::Vector{GCPair},lib =DEFAU
     if !isempty(overlap)
         # Reduce the bond_mat to only the overlapping atoms
         bond_mat_overlap = bond_mat[overlap_groups, overlap]
-
         # Generate all possible combinations of groups which cover all atoms
         candidate = []
         for i in 1:size(bond_mat_overlap, 1)
@@ -175,6 +178,9 @@ function get_groups_from_smiles(smiles::String,groups::Vector{GCPair},lib =DEFAU
         end
 
         # Select the groups that cover the most atoms
+        if length(candidate) > 1
+            @warn "Multiple combinations of groups cover all atoms. Selecting the first one."
+        end
         best_comb = overlap_groups[candidate[1]]
         push!(non_overlap_groups, best_comb...)
     end
@@ -185,7 +191,7 @@ function get_groups_from_smiles(smiles::String,groups::Vector{GCPair},lib =DEFAU
     group_id = unique(group_id_expanded)
     group_occ_list = [sum(group_id_expanded .== i) for i in group_id]
 
-    gcpairs = [name(groups[group_id[i]]) => group_occ_list[i] for i in 1:length(group_id)]
+    gcpairs = [name(groups[group_id[i]]) => group_occ_list[i] for i in 1:length(group_id)]   
 
     if check
         if sum(bond_mat_minimum) != natoms
