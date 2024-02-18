@@ -1,30 +1,30 @@
-function find_missing_groups_from_smiles(smiles,groups; max_group_size=5, environment=false)
-    mol = smilestomol(smiles)
+function find_missing_groups_from_smiles(smiles,groups, lib=MolecularGraphJL(); max_group_size=5, environment=false)
+    mol = get_mol(lib, smiles)
 
     __bonds = __getbondlist(lib,mol)
 
-    atom_type = string.(atom_symbol(mol))
-    graph = to_dict(mol)["graph"]
+    atom_type = string.(MolecularGraph.atom_symbol(mol))
+    graph = MolecularGraph.to_dict(mol)["graph"]
     bond_mat = zeros(Int, length(atom_type), length(atom_type))
     for i in 1:length(graph)
-        bond_mat[graph[i][1], graph[i][2]] = props(mol, graph[i][1], graph[i][2]).order
-        bond_mat[graph[i][2], graph[i][1]] = props(mol, graph[i][1], graph[i][2]).order
+        bond_mat[graph[i][1], graph[i][2]] = MolecularGraph.props(mol, graph[i][1], graph[i][2]).order
+        bond_mat[graph[i][2], graph[i][1]] = MolecularGraph.props(mol, graph[i][1], graph[i][2]).order
     end
 
     is_bonded = bond_mat .> 0
 
-    ring = is_in_ring(mol)
+    ring = MolecularGraph.is_in_ring(mol)
     ring_string = [if i "" else "!" end for i in ring]
 
-    hydrogens = total_hydrogens(mol)
-    bonds = connectivity(mol)
-    aromatic = is_aromatic(mol)
-    hybrid = hybridization(mol)
+    hydrogens = MolecularGraph.total_hydrogens(mol)
+    bonds = MolecularGraph.connectivity(mol)
+    aromatic = MolecularGraph.is_aromatic(mol)
+    hybrid = MolecularGraph.hybridization(mol)
     atom_type = [if aromatic[i] lowercase(atom_type[i]) else atom_type[i] end for i in 1:length(atom_type)]
 
     natoms = length(atom_type)
     smarts = @. "["*atom_type*"X"*string(bonds)*";H"*string(hydrogens)*";"*ring_string*"R"*"]"
-    names = @. generate_name(atom_type, bonds, hydrogens, ring, aromatic, hybrid)
+    names = @. generate_group_name(atom_type, bonds, hydrogens, ring, aromatic, hybrid)
     if environment
         new_smarts = deepcopy(smarts)
         new_names = deepcopy(names)
@@ -105,12 +105,48 @@ function find_missing_groups_from_smiles(smiles,groups; max_group_size=5, enviro
 
         occurence[i] = length(get_substruct_matches(lib,mol,query_i,__bonds))
 
-        println(unique_smarts[i], " ", unique_names[i], " ", occurence[i])
+        # println(unique_smarts[i], " ", unique_names[i], " ", occurence[i])
     end
 
     new_groups = [GCPair(unique_smarts[i], unique_names[i]) for i in 1:length(unique_smarts)]
 
     return new_groups
+end
+
+function generate_group_name(atom_type::String, bond::Int, hydrogens::Int, ring::Bool, aromatic::Bool, hybrid::Symbol)
+    name = ""
+    if  !ring # If is not on ring
+        if hydrogens == 0
+            name = atom_type
+        elseif hydrogens == 1
+            name = atom_type*"H"
+        else
+            name = atom_type*"H"*string(hydrogens)
+        end
+    elseif ring && lowercase(atom_type) != atom_type # If is on ring and not aromatic
+        if hydrogens == 0
+            name = "c"*atom_type
+        elseif hydrogens == 1
+            name = "c"*atom_type*"H"
+        else
+            name = "c"*atom_type*"H"*string(hydrogens)
+        end
+    elseif lowercase(atom_type) == atom_type # If is aromatic
+        if hydrogens == 0
+            name = "a"*uppercase(atom_type)
+        elseif hydrogens == 1
+            name = "a"*uppercase(atom_type)*"H"
+        else
+            name = "a"*uppercase(atom_type)*"H"*string(hydrogens)
+        end
+    end
+
+    if hybrid == :sp2 && !aromatic
+        name *= "="
+    elseif hybrid == :sp
+        name *= "#"
+    end
+    return name
 end
 
 export find_missing_groups_from_smiles
