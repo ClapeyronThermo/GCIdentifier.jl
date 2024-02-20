@@ -113,8 +113,68 @@ end
 function get_groups_from_smiles(smiles::String,groups::Vector{GCPair},lib =DEFAULTLIB;connectivity=false,check = true)
     mol = get_mol(lib,smiles)
     atoms = get_atoms(lib,mol)
+    natoms = length(atoms)
     __bonds = __getbondlist(lib,mol)
 
+    smatches_idx_expanded, bond_mat = find_covered_atoms(mol, groups, lib, atoms, __bonds, check)
+    # Find all atoms that are in more than one group
+    overlap = findall(sum(bond_mat, dims=1)[:] .> 1)
+    # non_overlap = findall(sum(bond_mat, dims=1)[:] .== 1)
+
+    # Split the groups in two sets: those that overlap and those that don't
+    overlap_groups = findall(sum(bond_mat[:, overlap], dims=2)[:] .> 0)
+    non_overlap_groups = [i for i in 1:length(smatches_idx_expanded) if !(i in overlap_groups)]
+    # Remove the overlapping groups from the non-overlapping groups
+    if !isempty(overlap)
+        # Reduce the bond_mat to only the overlapping atoms
+        bond_mat_overlap = bond_mat[overlap_groups, :]
+        # remove columns with only zeros
+        bond_mat_overlap = bond_mat_overlap[:, any(bond_mat_overlap .> 0, dims=1)[:]]
+        # Generate all possible combinations of groups which cover all atoms
+        candidate = []
+        for i in 1:size(bond_mat_overlap, 1)
+            combs = combinations(1:size(bond_mat_overlap, 1), i)
+            for comb in combs
+                # Test if the combination of groups covers all atoms
+                if sum(bond_mat_overlap[comb, :], dims=1) == ones(Int64, 1, size(bond_mat_overlap, 2))
+                    push!(candidate, comb)
+                end
+            end
+            # For the first combination that covers all atoms, stop (since it will use the fewest groups)
+            if length(candidate) > 0
+                break
+            end
+        end
+        # Select the groups that cover the most atoms
+        if length(candidate) > 1
+            @warn "Multiple combinations of groups cover all atoms. Selecting the first one."
+        end
+        best_comb = overlap_groups[candidate[1]]
+        push!(non_overlap_groups, best_comb...)
+    end
+
+    bond_mat_minimum = bond_mat[non_overlap_groups, :]
+    group_id_expanded = smatches_idx_expanded[non_overlap_groups]
+
+    group_id = unique(group_id_expanded)
+    group_occ_list = [sum(group_id_expanded .== i) for i in group_id]
+
+    gcpairs = [name(groups[group_id[i]]) => group_occ_list[i] for i in 1:length(group_id)]   
+
+    if check
+        if sum(bond_mat_minimum) != natoms
+            error("Could not find all groups for "*smiles)
+        end
+    end
+
+    if connectivity
+        return (smiles,gcpairs,get_connectivity(mol,group_id,groups,lib))
+    else
+        return (smiles,gcpairs)
+    end
+end
+
+function find_covered_atoms(mol, groups, lib, atoms, __bonds, check)
     smatches = []
     smatches_idx = Int[]
 
@@ -151,59 +211,7 @@ function get_groups_from_smiles(smiles::String,groups::Vector{GCPair},lib =DEFAU
             error("Could not find all groups for "*smiles)
         end
     end
-    # Find all atoms that are in more than one group
-    overlap = findall(sum(bond_mat, dims=1)[:] .> 1)
-
-    # Split the groups in two sets: those that overlap and those that don't
-    overlap_groups = findall(sum(bond_mat[:, overlap], dims=2)[:] .> 0)
-    non_overlap_groups = findall(sum(bond_mat[:, overlap], dims=2)[:] .== 0)
-
-    if !isempty(overlap)
-        # Reduce the bond_mat to only the overlapping atoms
-        bond_mat_overlap = bond_mat[overlap_groups, overlap]
-        # Generate all possible combinations of groups which cover all atoms
-        candidate = []
-        for i in 1:size(bond_mat_overlap, 1)
-            combs = combinations(1:size(bond_mat_overlap, 1), i)
-            for comb in combs
-                # Test if the combination of groups covers all atoms
-                if sum(bond_mat_overlap[comb, :], dims=1) == ones(Int64, 1, size(bond_mat_overlap, 2))
-                    push!(candidate, comb)
-                end
-            end
-            # For the first combination that covers all atoms, stop (since it will use the fewest groups)
-            if length(candidate) > 0
-                break
-            end
-        end
-
-        # Select the groups that cover the most atoms
-        if length(candidate) > 1
-            @warn "Multiple combinations of groups cover all atoms. Selecting the first one."
-        end
-        best_comb = overlap_groups[candidate[1]]
-        push!(non_overlap_groups, best_comb...)
-    end
-
-    bond_mat_minimum = bond_mat[non_overlap_groups, :]
-    group_id_expanded = smatches_idx_expanded[non_overlap_groups]
-
-    group_id = unique(group_id_expanded)
-    group_occ_list = [sum(group_id_expanded .== i) for i in group_id]
-
-    gcpairs = [name(groups[group_id[i]]) => group_occ_list[i] for i in 1:length(group_id)]   
-
-    if check
-        if sum(bond_mat_minimum) != natoms
-            error("Could not find all groups for "*smiles)
-        end
-    end
-
-    if connectivity
-        return (smiles,gcpairs,get_connectivity(mol,group_id,groups,lib))
-    else
-        return (smiles,gcpairs)
-    end
+    return smatches_idx_expanded, bond_mat
 end
 
 function get_connectivity(mol,group_id,groups,lib = DEFAULTLIB)
