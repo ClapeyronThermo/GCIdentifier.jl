@@ -1,4 +1,28 @@
-function find_missing_groups_from_smiles(smiles,groups, lib=MolecularGraphJL(); max_group_size=5, environment=false)
+"""
+    find_missing_groups_from_smiles(smiles::String, groups, lib = DEFAULTLIB;max_group_size = nothing, environment=false, reduced=false)
+
+Given a SMILES string and a group list (`groups::Vector{GCPair}`), returns a list of potential groups (`new_groups::Vector{GCPair}`) which could cover those atoms not covered within `groups`. If no `groups` vector is provided, it will simply generate all possible groups for the molecule.
+
+Optional arguments:
+- `max_group_size::Int`: The maximum number of atoms within a group to be generated. If `nothing`, the maximum size is however many atoms a central atom is bonded to.
+- `environment::Bool`: If true, the groups SMARTS will include information about the environment of the group is in. For example, in pentane, if environment is false, there will only be one CH2 group, whereas, if environment is true, there will be two CH2 groups, one bonded to CH3 and one bonded to another CH2.
+- `reduced::Bool`: If true, the groups will be generated such that the minimum number of groups required to represent the molecule, based on `max_group_size`, will be generated. If false, all possible groups will be generated.
+
+## Example
+
+```julia
+julia> find_missing_groups_from_smiles("CC(=O)O")
+7-element Vector{GCIdentifier.GCPair}:
+ GCIdentifier.GCPair("[CX4;H3;!R]", "CH3")
+ GCIdentifier.GCPair("[CX3;H0;!R]", "C=")
+ GCIdentifier.GCPair("[OX1;H0;!R]", "O=")
+ GCIdentifier.GCPair("[OX2;H1;!R]", "OH")
+ GCIdentifier.GCPair("[CX3;H0;!R](=[OX1;H0;!R])", "C=O=")
+ GCIdentifier.GCPair("[CX3;H0;!R]([OX2;H1;!R])", "C=OH")
+ GCIdentifier.GCPair("[CX3;H0;!R](=[OX1;H0;!R])([OX2;H1;!R])", "C=O=OH")
+```
+"""
+function find_missing_groups_from_smiles(smiles, groups=[], lib=MolecularGraphJL(); max_group_size=nothing, environment=false, reduced=false)
     mol = get_mol(lib, smiles)
 
     __bonds = __getbondlist(lib,mol)
@@ -43,31 +67,46 @@ function find_missing_groups_from_smiles(smiles,groups, lib=MolecularGraphJL(); 
         names = new_names
     end
 
+    if max_group_size == 1
+        unique_smarts = unique(smarts)
+        unique_names = []
+        for i in 1:length(unique_smarts)
+            push!(unique_names, names[findall(x->x==unique_smarts[i], smarts)[1]])
+        end
+    
+        new_groups = [GCPair(unique_smarts[i], unique_names[i]) for i in 1:length(unique_smarts)]
+
+        return new_groups
+    end
+
     for i in 1:natoms
-        for j in 1:natoms
+        for j in i:natoms
             if is_bonded[i,j]
-                # If carbon not on ring
-                if atom_type[i] == "C" && !ring[i] 
-                    # Bond it to any other atom that is non-carbon atom not on ring or carbon atom on a ring
-                    if (atom_type[j] == "C" && ring[j] || atom_type[j] != "C")
-                        push!(smarts, smarts[i]*smarts[j])
-                        push!(names, names[i]*names[j])
-                    end
                 # If carbon atom on ring
-                elseif (atom_type[i] == "C" || atom_type[i] == "c") && ring[i]
+                if (atom_type[i] == "C" || atom_type[i] == "c") && ring[i]
                     # Bond it to any other atom that is non-carbon atom on a ring or carbon atom not on a ring
                     if (atom_type[j] == "C" && !ring[j] || (atom_type[j] != "C" && atom_type[j] != "c"))
                         push!(smarts, smarts[i]*smarts[j])
                         push!(names, names[i]*names[j])
                     end
-                elseif (atom_type[i] != "C" && atom_type[i] != "c")
+                elseif (atom_type[i] != "C" && atom_type[i] != "c") || (atom_type[i] == "C" && !ring[i])
                     # Bond it to any other atom that is not a carbon atom
                     nbonds = sum(is_bonded[i,:])
                     bondable_smarts = smarts[1:natoms][is_bonded[i,:]]
                     bondable_names = names[1:natoms][is_bonded[i,:]]
                     bondable_atom_types = atom_type[1:natoms][is_bonded[i,:]]
                     bond_orders = bond_mat[i, is_bonded[i,:]]
-                    for k in 1:max_group_size-1
+
+                    if isnothing(max_group_size)
+                        max_group_size = nbonds+2
+                    end
+
+                    if reduced
+                        min_group_size = max_group_size-1
+                    else  
+                        min_group_size = 1
+                    end
+                    for k in min_group_size:max_group_size-1
                         combs = Combinatorics.combinations(1:nbonds, k)
                         for comb in combs
                             if any(bondable_atom_types[comb] .== "C" .|| bondable_atom_types[comb] .== "c")
