@@ -148,6 +148,8 @@ function get_groups_from_smiles(smiles::String,groups::Vector{GCPair},lib =DEFAU
         # Select the groups that cover the most atoms
         if length(candidate) > 1
             @warn "Multiple combinations of groups cover all atoms. Selecting the first one."
+        elseif length(candidate) == 0
+            error("Could not find all groups for "*smiles)
         end
         best_comb = overlap_groups[candidate[1]]
         push!(non_overlap_groups, best_comb...)
