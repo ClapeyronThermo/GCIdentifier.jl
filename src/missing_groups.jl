@@ -117,7 +117,7 @@ function find_missing_groups_from_smiles(smiles, groups=nothing, lib=MolecularGr
             nbonds = sum(is_bonded[i,:].&occurrence[1:natoms] .> 0)
             bondable_atom_types = atom_type[1:natoms][is_bonded[i,:].&occurrence[1:natoms] .> 0]
 
-            is_carbon = bondable_atom_types .== "C" .|| bondable_atom_types .== "c"
+            is_carbon = (bondable_atom_types .== "C") .| (bondable_atom_types .== "c")
             ncarbons = sum(is_carbon)
             nbonds = nbonds - ncarbons
 
@@ -148,7 +148,7 @@ function find_missing_groups_from_smiles(smiles, groups=nothing, lib=MolecularGr
                 combs = Combinatorics.combinations(1:nbonds, k)
                 for comb in combs
                     # println(bondable_atom_types[comb])
-                    if any(bondable_atom_types[comb] .== "C" .|| bondable_atom_types[comb] .== "c")
+                    if any((bondable_atom_types[comb] .== "C") .| (bondable_atom_types[comb] .== "c"))
                         # println(comb)
                         continue
                     else
