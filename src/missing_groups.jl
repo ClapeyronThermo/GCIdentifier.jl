@@ -99,7 +99,7 @@ function find_missing_groups_from_smiles(smiles, groups=nothing, lib=MolecularGr
         # println(occurrence)
         # println(smarts[i])
         # If carbon atom on ring
-        if (atom_type[i] == "C" || atom_type[i] == "c") && ring[i] && occurrence[i] > 0
+        if (atom_type[i] == "C" || atom_type[i] == "c") && ring[i] && (occurrence[i] > 0 || reduced)
             for j in 1:natoms
                 if is_bonded[i,j]
                     # Bond it to any other atom that is non-carbon atom on a ring or carbon atom not on a ring
@@ -112,7 +112,7 @@ function find_missing_groups_from_smiles(smiles, groups=nothing, lib=MolecularGr
                     end
                 end
             end
-        elseif ((atom_type[i] != "C" && atom_type[i] != "c") || (atom_type[i] == "C" && !ring[i])) && occurrence[i] > 0
+        elseif ((atom_type[i] != "C" && atom_type[i] != "c") || (atom_type[i] == "C" && !ring[i])) && (occurrence[i] > 0 || !reduced)
             # Bond it to any other atom that is not a carbon atom
             nbonds = sum(is_bonded[i,:].&occurrence[1:natoms] .> 0)
             bondable_atom_types = atom_type[1:natoms][is_bonded[i,:].&occurrence[1:natoms] .> 0]
@@ -120,6 +120,7 @@ function find_missing_groups_from_smiles(smiles, groups=nothing, lib=MolecularGr
             is_carbon = bondable_atom_types .== "C" .|| bondable_atom_types .== "c"
             ncarbons = sum(is_carbon)
             nbonds = nbonds - ncarbons
+            idx_bondable = is_bonded[i,:].&occurrence[1:natoms] .> 0
 
             bondable_smarts = smarts[1:natoms][is_bonded[i,:].&occurrence[1:natoms] .> 0][.!(is_carbon)]
             bondable_names = names[1:natoms][is_bonded[i,:].&occurrence[1:natoms] .> 0][.!(is_carbon)]
@@ -137,11 +138,11 @@ function find_missing_groups_from_smiles(smiles, groups=nothing, lib=MolecularGr
             else  
                 min_size = 1
             end
-            println(smarts[i])
+            # println(smarts[i])
 
-            println(max_size-1)
-            println(min_size)
-            println(nbonds)
+            # println(max_size-1)
+            # println(min_size)
+            # println(nbonds)
 
             for k in min_size:max_size-1
                 # println(k)
@@ -168,7 +169,7 @@ function find_missing_groups_from_smiles(smiles, groups=nothing, lib=MolecularGr
                         push!(names, new_names)
                         occurrence[i] -= 1
                         idx = 1:natoms
-                        idx = idx[is_bonded[i,:].&occurrence[1:natoms] .> 0][.!(is_carbon)][comb]
+                        idx = idx[idx_bondable][.!(is_carbon)][comb]
                         occurrence[idx] .-= 1
                         append!(occurrence, [1])
                     end
