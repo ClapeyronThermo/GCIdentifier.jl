@@ -245,7 +245,7 @@ function get_connectivity(mol,group_id,groups,lib = DEFAULTLIB)
             end
         end
     end
-    return [pairs[i]=>nbonds[i] for i in 1:length(nbonds)]
+    return connectivity
 end
 
 
