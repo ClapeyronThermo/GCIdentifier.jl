@@ -8,8 +8,9 @@ makedocs(sitename = "GCIdentifier.jl",
     warnonly = Documenter.except(),
     authors = "Pierre J. Walker and Andrés Riedemann.",
     pages = ["Home" => "index.md",
-            "Background" => "background.md",
-            "Basic Usage" => "basic_usage.md",        
+            "Group Assignment" => "group_search.md",
+            "Finding Missing Groups" => "missing_groups.md",  
+            "Custom Groups" => "custom_groups.md",      
             "API" => "api.md"]
     )
 
