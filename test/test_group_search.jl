@@ -1,9 +1,7 @@
 function test_gcmatch(groups,smiles,result)
-    evaluated_rdkit = Set(get_groups_from_smiles(smiles,groups,RDKitLib(),check = false)[2])
-    evaluated_molgraphJL = Set(get_groups_from_smiles(smiles,groups,MolecularGraphJL(),check = false)[2])
+    evaluated = Set(get_groups_from_smiles(smiles,groups,check = false)[2])
     reference = Set(result)
-    @test isequal(evaluated_rdkit,reference)
-    @test isequal(evaluated_molgraphJL,reference)
+    @test isequal(evaluated,reference)
 end
 
 test_gcmatch(groups) = (smiles,result) -> test_gcmatch(groups,smiles,result)

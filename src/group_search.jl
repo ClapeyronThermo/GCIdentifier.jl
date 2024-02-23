@@ -85,15 +85,11 @@ function get_grouplist end
 get_grouplist(x::Vector{GCPair}) = x
 
 """
-    get_groups_from_smiles(smiles::String,groups,lib = DEFAULTLIB;connectivity = false)
+    get_groups_from_smiles(smiles::String,groups;connectivity = false)
 
 Given a SMILES string and a group list (`groups::Vector{GCPair}`), returns a list of groups and their corresponding amount.
 
 If `connectivity` is true, then it will additionally return a vector containing the amount of bonds between each pair.
-
-`lib` allows the selection of a molecular library to perform the substructure matching. the two available options are:
-- `RDKitLib()` : uses `RDKit` (via the `RDKitMinimalLib.jl` package) to perform the substructure matching. Default in Linux and Mac.
-- `MolecularGraphJL()` : uses `MolecularGraph.jl`to perform the substructure matching. Default in Windows (due to a bug in RDKit in this particular Operating System).
 
 ## Examples
 
@@ -110,13 +106,13 @@ function get_groups_from_smiles(smiles::String,groups;connectivity = false)
     return get_groups_from_smiles(smiles,groups;connectivity = connectivity)
 end
 
-function get_groups_from_smiles(smiles::String,groups::Vector{GCPair},lib =DEFAULTLIB;connectivity=false,check = true)
-    mol = get_mol(lib,smiles)
-    atoms = get_atoms(lib,mol)
+function get_groups_from_smiles(smiles::String,groups::Vector{GCPair};connectivity=false,check = true)
+    mol = get_mol(smiles)
+    atoms = get_atoms(mol)
     natoms = length(atoms)
-    __bonds = __getbondlist(lib,mol)
+    __bonds = __getbondlist(mol)
 
-    smatches_idx_expanded, bond_mat = find_covered_atoms(mol, groups, lib, atoms, __bonds, check)
+    smatches_idx_expanded, bond_mat = find_covered_atoms(mol, groups, atoms, __bonds, check)
     # Find all atoms that are in more than one group
     overlap = findall(sum(bond_mat, dims=1)[:] .> 1)
     # non_overlap = findall(sum(bond_mat, dims=1)[:] .== 1)
@@ -170,21 +166,21 @@ function get_groups_from_smiles(smiles::String,groups::Vector{GCPair},lib =DEFAU
     end
 
     if connectivity
-        return (smiles,gcpairs,get_connectivity(mol,group_id,groups,lib))
+        return (smiles,gcpairs,get_connectivity(mol,group_id,groups))
     else
         return (smiles,gcpairs)
     end
 end
 
-function find_covered_atoms(mol, groups, lib, atoms, __bonds, check)
+function find_covered_atoms(mol, groups, atoms, __bonds, check)
     smatches = []
     smatches_idx = Int[]
 
     #step 0.a, find all groups that could get a match
     for i in 1:length(groups)
-        query_i = get_qmol(lib,smarts(groups[i]))
-        if has_substruct_match(lib,mol,query_i)
-            push!(smatches,get_substruct_matches(lib,mol,query_i,__bonds))
+        query_i = get_qmol(smarts(groups[i]))
+        if has_substruct_match(mol,query_i)
+            push!(smatches,get_substruct_matches(mol,query_i,__bonds))
             push!(smatches_idx,i)
         end
     end
@@ -216,7 +212,7 @@ function find_covered_atoms(mol, groups, lib, atoms, __bonds, check)
     return smatches_idx_expanded, bond_mat
 end
 
-function get_connectivity(mol,group_id,groups,lib = DEFAULTLIB)
+function get_connectivity(mol,group_id,groups)
 
     ngroups = length(group_id)
     A = zeros(ngroups,ngroups)
@@ -225,8 +221,8 @@ function get_connectivity(mol,group_id,groups,lib = DEFAULTLIB)
         gci = groups[group_id[i]]
         smart1 = smarts(gci)
         smart2 = smarts(gci)
-        querie = get_qmol(lib,smart1*smart2)
-        smatch = get_substruct_matches(lib,mol,querie)
+        querie = get_qmol(smart1*smart2)
+        smatch = get_substruct_matches(mol,querie)
         name_i = name(gci)
         A[i,i] = length(smatch)
         if A[i,i]!=0
@@ -236,8 +232,8 @@ function get_connectivity(mol,group_id,groups,lib = DEFAULTLIB)
         for j in i+1:ngroups
             gcj = groups[group_id[j]]
             smart2 = smarts(gcj)
-            querie = get_qmol(lib,smart1*smart2)
-            smatch = get_substruct_matches(lib,mol,querie)
+            querie = get_qmol(smart1*smart2)
+            smatch = get_substruct_matches(mol,querie)
             A[i,j] = length(smatch)
             name_j = name(gcj)
             if A[i,j]!=0

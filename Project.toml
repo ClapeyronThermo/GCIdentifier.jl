@@ -8,7 +8,6 @@ ChemicalIdentifiers = "fa4ea961-1416-484e-bda2-883ee1634ba5"
 Clapeyron = "7c7805af-46cc-48c9-995b-ed0ed2dc909a"
 Combinatorics = "861a8166-3701-5b0c-9a16-15d98fcdc6aa"
 MolecularGraph = "6c89ec66-9cd8-5372-9f91-fabc50dd27fd"
-RDKitMinimalLib = "44044271-7623-48dc-8250-42433c44e4b7"
 
 [weakdeps]
 ChemicalIdentifiers = "fa4ea961-1416-484e-bda2-883ee1634ba5"
@@ -23,12 +22,11 @@ ChemicalIdentifiers = "0.1"
 Clapeyron = "0.4,0.5"
 Combinatorics = "1"
 MolecularGraph = "0.14,0.15,0.16"
-RDKitMinimalLib = "1"
 julia = "1.6"
 
 [extras]
-Clapeyron = "7c7805af-46cc-48c9-995b-ed0ed2dc909a"
 ChemicalIdentifiers = "fa4ea961-1416-484e-bda2-883ee1634ba5"
+Clapeyron = "7c7805af-46cc-48c9-995b-ed0ed2dc909a"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [targets]
