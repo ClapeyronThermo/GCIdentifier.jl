@@ -9,7 +9,7 @@ test_gcmatch(groups) = (smiles,result) -> test_gcmatch(groups,smiles,result)
 @testset "UNIFAC examples" begin
     #http://www.aim.env.uea.ac.uk/aim/info/UNIFACgroups.html
     unifac = test_gcmatch(UNIFACGroups)
-    
+
     #alkane group
     unifac("CC",gcstring"CH3:2") #ethane
     unifac("CCCC",gcstring"CH3:2;CH2:2") #n-butane
@@ -41,7 +41,7 @@ test_gcmatch(groups) = (smiles,result) -> test_gcmatch(groups,smiles,result)
 
     #water
     unifac("O",gcstring"H2O:1") #water
-    
+
     #aromatic carbon-alcohol
     unifac("Oc1ccccc1",gcstring"ACH:5;ACOH:1") #phenol
 
@@ -55,7 +55,7 @@ test_gcmatch(groups) = (smiles,result) -> test_gcmatch(groups,smiles,result)
     #acetate group
     unifac("CCCCOC(=O)C",gcstring"CH3:1;CH2:3;CH3COO:1") #Butyl acetate #fails at the matching stage
     unifac("O=C(OC)CC",gcstring"CH3:2;CH2COO:1") #methyl propionate #fails at the matching stage
-    
+
     #formate group
     unifac("O=COCC",gcstring"CH3:1;CH2:1;HCOO:1") #ethyl formate
 
@@ -64,7 +64,7 @@ test_gcmatch(groups) = (smiles,result) -> test_gcmatch(groups,smiles,result)
     unifac("CCOCC",gcstring"CH3:2;CH2:1;CH2O:1") #diethyl ether
     unifac("O(C(C)C)C(C)C",gcstring"CH3:4;CH:1;CHO:1") #diisopropyl ether
     unifac("C1CCOC1",gcstring"CY-CH2:2;THF:1") #tetrahydrofuran #check?
-    
+
     #primary amine
     unifac("CN",gcstring"CH3NH2:1") #methylamine
     unifac("CCN",gcstring"CH3:1;CH2NH2:1") #ethylamine
@@ -78,10 +78,10 @@ test_gcmatch(groups) = (smiles,result) -> test_gcmatch(groups,smiles,result)
     #tertiary amine
     unifac("CN(C)C",gcstring"CH3:2;CH3N:1") #trimethylamine
     unifac("CCN(CC)CC",gcstring"CH3:3;CH2:2;CH2N:1") #triethylamine
-    
+
     #aromatic amine
     unifac("c1ccc(cc1)N",gcstring"ACH:5;ACNH2:1") #aniline
-    
+
     #furfural
     unifac("c1cc(oc1)C=O",gcstring"FURFURAL:1") #furfural
 
@@ -96,6 +96,7 @@ end
     # Test a highly branched hydrocarbon
     smiles = "c1ccccc1C(CCCC)(CCCC(C))C"
     (component, groups, connectivity) = get_groups_from_smiles("c1ccccc1C(CC)(CC(C))C", gcPPCSAFTGroups; connectivity=true)
-    @test isequal([ "CH3" => 3,"CH2" => 3,"C" => 1,"aCH" => 5,"aC" => 1],groups)
-    @test isequal([("CH3", "CH2") => 2,("CH3", "C") => 1,("CH2", "CH2") => 1,("CH2", "C") => 2,("C", "aC") => 1,("aCH", "aCH") => 4,("aCH", "aC") => 2], connectivity)
+
+    @test isequal([ "CH3" => 3,"CH2" => 3,"C" => 1,"aCH" => 5,"aC" => 1] |> Set,Set(groups))
+    @test isequal([("CH3", "CH2") => 2,("CH3", "C") => 1,("CH2", "CH2") => 1,("CH2", "C") => 2,("C", "aC") => 1,("aCH", "aCH") => 4,("aCH", "aC") => 2] |> Set,Set(connectivity))
 end
