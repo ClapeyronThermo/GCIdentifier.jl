@@ -15,6 +15,7 @@ import MolecularGraph
 
 include("prelude.jl")
 include("group_search.jl")
+include("missing_groups.jl")
 include("database/database.jl")
 
 function get_groups_from_name end #overload this if ChemicalIdentifiers is loaded.
