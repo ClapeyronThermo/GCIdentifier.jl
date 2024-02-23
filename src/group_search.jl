@@ -224,7 +224,7 @@ function get_connectivity(mol,group_id,groups)
         querie = get_qmol(smart1*smart2)
         smatch = get_substruct_matches(mol,querie)
         name_i = name(gci)
-        A[i,i] = length(smatch)
+        A[i,i] = length(unique(smatch))
         if A[i,i]!=0
             append!(connectivity,[(name_i,name_i)=>Int(A[i,i])])
         end
