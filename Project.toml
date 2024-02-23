@@ -28,6 +28,7 @@ julia = "1.6"
 
 [extras]
 Clapeyron = "7c7805af-46cc-48c9-995b-ed0ed2dc909a"
+ChemicalIdentifiers = "fa4ea961-1416-484e-bda2-883ee1634ba5"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [targets]
