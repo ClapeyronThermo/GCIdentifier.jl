@@ -66,3 +66,8 @@ To remove the package, hit the ```]``` key to enter Pkg mode, then type
 ```julia
 Pkg> rm GCIdentifier
 ```
+
+## Contributing
+If you'd like to make a contribution to GCIdentifier, you can:
+* Report an issue: If you encounter an error in which groups are assigned or any other type of error, feel free to raise an issue and one of the developers will try to address it. If you've found the source of the error and fixed it yourself, feel free to also open a Pull Request so that it can be reviewed and pushed to the main branch.
+* Implement your own modifications: We are always open to making changes to the source code and documentation! If you'd like to add your own groups and/or functionalities to the package, feel free to open a pull request and one of the developers will review it before merging it with the main branch.
