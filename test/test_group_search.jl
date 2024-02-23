@@ -95,8 +95,16 @@ end
 @testset "gcPPC-SAFT Connectivity" begin
     # Test a highly branched hydrocarbon
     smiles = "c1ccccc1C(CCCC)(CCCC(C))C"
-    (component, groups, connectivity) = get_groups_from_smiles("c1ccccc1C(CC)(CC(C))C", gcPPCSAFTGroups; connectivity=true)
+    (component, groups, connectivity) = get_groups_from_smiles(smiles, gcPPCSAFTGroups; connectivity=true)
 
     @test isequal([ "CH3" => 3,"CH2" => 3,"C" => 1,"aCH" => 5,"aC" => 1] |> Set,Set(groups))
     @test isequal([("CH3", "CH2") => 2,("CH3", "C") => 1,("CH2", "CH2") => 1,("CH2", "C") => 2,("C", "aC") => 1,("aCH", "aCH") => 4,("aCH", "aC") => 2] |> Set,Set(connectivity))
+
+    # Test case where order matters
+    # Test a highly branched hydrocarbon
+    smiles = "CC(=O)OC"
+    (component, groups, connectivity) = get_groups_from_smiles(smiles, gcPPCSAFTGroups; connectivity=true)
+
+    @test isequal(["CH3" => 2, "COO" => 1] |> Set,Set(groups))
+    @test isequal([("CH3", "COO") => 2] |> Set,Set(connectivity))
 end
