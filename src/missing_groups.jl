@@ -1,5 +1,5 @@
 """
-    find_missing_groups_from_smiles(smiles::String, groups, lib = DEFAULTLIB;max_group_size = nothing, environment=false, reduced=false)
+    find_missing_groups_from_smiles(smiles::String, groups;max_group_size = nothing, environment=false, reduced=false)
 
 Given a SMILES string and a group list (`groups::Vector{GCPair}`), returns a list of potential groups (`new_groups::Vector{GCPair}`) which could cover those atoms not covered within `groups`. If no `groups` vector is provided, it will simply generate all possible groups for the molecule.
 
@@ -27,15 +27,15 @@ julia> find_missing_groups_from_smiles("CC(=O)O")
  GCIdentifier.GCPair("[CX3;H0;!R](=[OX1;H0;!R])([OX2;H1;!R])", "C=O=OH")
 ```
 """
-function find_missing_groups_from_smiles(smiles, groups=nothing, lib=MolecularGraphJL(); max_group_size=nothing, environment=false, reduced=false)
-    mol = get_mol(lib, smiles)
-    __bonds = __getbondlist(lib,mol)
-    atoms = get_atoms(lib,mol)
+function find_missing_groups_from_smiles(smiles, groups=nothing; max_group_size=nothing, environment=false, reduced=false)
+    mol = get_mol(smiles)
+    __bonds = __getbondlist(mol)
+    atoms = get_atoms(mol)
 
     if isnothing(groups)
         missing_atoms = ones(Bool, length(atoms))
     else
-        smatches_idx_expanded, atom_coverage = find_covered_atoms(mol, groups, lib, atoms, __bonds, false)
+        smatches_idx_expanded, atom_coverage = find_covered_atoms(mol, groups, atoms, __bonds, false)
         missing_atoms = (sum(atom_coverage, dims=1) .== 0)[:]
     end
 
@@ -188,9 +188,9 @@ function find_missing_groups_from_smiles(smiles, groups=nothing, lib=MolecularGr
     occurrence = zeros(Int, length(unique_smarts))
     for i in 1:length(unique_smarts)
         push!(unique_names, names[findall(x->x==unique_smarts[i], smarts)[1]])
-        query_i = get_qmol(lib,unique_smarts[i])
+        query_i = get_qmol(unique_smarts[i])
 
-        occurrence[i] = length(get_substruct_matches(lib,mol,query_i,__bonds))
+        occurrence[i] = length(get_substruct_matches(mol,query_i,__bonds))
 
         # println(unique_smarts[i], " ", unique_names[i], " ", occurrence[i])
     end

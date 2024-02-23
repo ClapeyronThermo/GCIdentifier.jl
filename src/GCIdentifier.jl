@@ -1,5 +1,4 @@
 module GCIdentifier
-import RDKitMinimalLib
 using Combinatorics
 
 @static if !isdefined(Base,:eachsplit)
