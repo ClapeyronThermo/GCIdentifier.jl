@@ -55,7 +55,7 @@ Pkg> add GCIdentifier
 ```
 Exit Pkg mode by hitting backspace.
 
-Now you may begin using functions from the Clapeyron library by entering the command
+Now you may begin using functions from the GCIdentifier library by entering the command
 
 ```julia
 using GCIdentifier
