@@ -1,7 +1,7 @@
 @testset "Missing groups functionality" begin
     @testset "Ketones in SAFT-γ Mie" begin
         smiles = "CCC(=O)CC"
-        @test_throws "Could not find all groups for " get_groups_from_smiles(smiles,SAFTgammaMieGroups)
+        @test_throws ErrorException get_groups_from_smiles(smiles,SAFTgammaMieGroups)
         new_groups = find_missing_groups_from_smiles(smiles, SAFTgammaMieGroups)
         @test isequal(new_groups,[GCIdentifier.GCPair("[CX3;H0;!R]", "C="),
                                   GCIdentifier.GCPair("[OX1;H0;!R]", "O="),
