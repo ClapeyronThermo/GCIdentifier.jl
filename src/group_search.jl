@@ -10,6 +10,8 @@ struct GCPair
     name::String
 end
 
+export GCPair
+
 smarts(x::GCPair) = x.smarts
 name(x::GCPair) = x.name
 
