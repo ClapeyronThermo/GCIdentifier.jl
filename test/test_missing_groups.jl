@@ -6,9 +6,18 @@
         @test isequal(new_groups,[GCIdentifier.GCPair("[CX3;H0;!R]", "C="),
                                   GCIdentifier.GCPair("[OX1;H0;!R]", "O="),
                                   GCIdentifier.GCPair("[CX3;H0;!R](=[OX1;H0;!R])", "C=O=")])
+
+        new_groups = find_missing_groups_from_smiles(smiles, SAFTgammaMieGroups; max_group_size=1)
+        @test isequal(new_groups,[GCIdentifier.GCPair("[CX3;H0;!R]", "C="),
+                                  GCIdentifier.GCPair("[OX1;H0;!R]", "O=")])
         
         new_groups = find_missing_groups_from_smiles(smiles, SAFTgammaMieGroups; reduced = true)
         @test isequal(new_groups,[GCIdentifier.GCPair("[CX3;H0;!R](=[OX1;H0;!R])", "C=O=")])
+
+        new_groups = find_missing_groups_from_smiles("CCC(=O)CC", SAFTgammaMieGroups; environment=true)
+        @test isequal(new_groups, [GCIdentifier.GCPair("[CX3;H0;!R;\$([CX3;H0;!R](=[OX1;H0;!R]))]", "C=(O=)"),
+                                   GCIdentifier.GCPair("[OX1;H0;!R;\$([OX1;H0;!R](=[CX3;H0;!R]))]", "O=(C=)"),
+                                   GCIdentifier.GCPair("[CX3;H0;!R;\$([CX3;H0;!R](=[OX1;H0;!R]))](=[OX1;H0;!R;\$([OX1;H0;!R](=[CX3;H0;!R]))])", "C=(O=)O=(C=)")])
     end
 
     @testset "Generic groups for AMP" begin
