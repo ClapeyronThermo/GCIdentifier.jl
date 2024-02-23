@@ -97,8 +97,8 @@ end
     smiles = "c1ccccc1C(CCCC)(CCCC(C))C"
     (component, groups, connectivity) = get_groups_from_smiles(smiles, gcPPCSAFTGroups; connectivity=true)
 
-    @test isequal([ "CH3" => 3,"CH2" => 3,"C" => 1,"aCH" => 5,"aC" => 1] |> Set,Set(groups))
-    @test isequal([("CH3", "CH2") => 2,("CH3", "C") => 1,("CH2", "CH2") => 1,("CH2", "C") => 2,("C", "aC") => 1,("aCH", "aCH") => 4,("aCH", "aC") => 2] |> Set,Set(connectivity))
+    @test isequal(["CH2" => 7, "aCH" => 5, "CH3" => 3, "aC" => 1, "C" => 1] |> Set,Set(groups))
+    @test isequal([("aCH", "aCH") => 4, ("CH2", "C") => 2, ("C", "aC") => 1, ("aCH", "aC") => 2, ("CH3", "CH2") => 3, ("CH2", "CH2") => 5, ("CH3", "C") => 1] |> Set,Set(connectivity))
 
     # Test case where order matters
     # Test a highly branched hydrocarbon
