@@ -1,6 +1,6 @@
 using ChemicalIdentifiers
 
-@testset "Extension - Clapeyron" begin
+@testset "Extension - ChemicalIdentifiers" begin
     name = "ibuprofen"
     (component, groups) = get_groups_from_name(name, UNIFACGroups)
     @test isequal(groups, ["COOH" => 1, 
