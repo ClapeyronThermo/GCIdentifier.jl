@@ -6,7 +6,12 @@ Let's consider the case where we want to get the groups for ibuprofen from the U
 julia> (smiles,groups) = get_groups_from_smiles("CC(Cc1ccc(cc1)C(C(=O)O)C)C", UNIFACGroups)
 ("CC(Cc1ccc(cc1)C(C(=O)O)C)C", ["COOH" => 1, "CH3" => 3, "CH" => 1, "ACH" => 4, "ACCH2" => 1, "ACCH" => 1])
 ```
-where `smiles` will output the molecular SMILES and `groups` is a vector of pairs where the first element is the group name and the second is the number of times the group occurs within the molecule. If this function fails, it is usually because, either, the SMILES is unphysical, or the method used doesn't cover all atoms present within a molecule.
+where `smiles` will output the molecular SMILES and `groups` is a vector of pairs where the first element is the group name and the second is the number of times the group occurs within the molecule. If this function fails, it is usually because, either, the SMILES is unphysical, or the method used doesn't cover all atoms present within a molecule. In the case of the latter, one can still obtain the groups that have been identified by specifying `check=false` in the optional arguments. For example, SAFT-$\gamma$ Mie does not have the functional group for ketones:
+```julia
+julia> (smiles,groups) = get_groups_from_smiles("CCC(=O)CC", SAFTgammaMieGroups; check=false)
+("CCC(=O)CC", ["CH3" => 2, "CH2" => 2])
+```
+To propose new groups that cover the missing atoms, take a look at our [`find_missing_groups` function](./missing_groups.md).
 
 ## Connectivity
 There are certain group-contribution approaches, such as gcPCP-SAFT and s-SAFT-$\gamma$ Mie where information about how groups are linked to each other is required. It is possible to obtain information about the connectivity between groups from GCIdentifier by simply specifying `connectivity=true` within the `get_groups_from_smiles` function. For example, in the case of acetone:
