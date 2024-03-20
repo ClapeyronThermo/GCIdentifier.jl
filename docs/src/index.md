@@ -2,7 +2,7 @@
 CurrentModule = GCIdentifier
 ```
 # GCIdentifier.jl
-An extensible [Julia](http://julialang.org) package for the modelling of fluids using thermodynamic equations of state. These include the standard cubics (van der Waals, Redlich-Kwong, Peng-Robinson, _etc._), SAFT-type equations (PC-SAFT, SAFT-VR Mie, SAFT-$\gamma$ Mie, _etc._), empirical equations (GERG2008, IAWPS95), Activity coefficient models (NRTL, UNIFAC, COSMO-SAC, _etc._) and many more.
+Welcome to GCIdentifier! This module provides utilities needed to fragment a given molecular SMILES (or name) based on the groups provided in existing group-contribution methods (such as UNIFAC, Joback's method and SAFT-$\gamma$ Mie). Additional functionalities have been provided to automatically identify and propose new groups.
 
 The documentation is laid out as follows:
 
