@@ -4,6 +4,8 @@ CurrentModule = GCIdentifier
 # GCIdentifier.jl
 Welcome to GCIdentifier! This module provides utilities needed to fragment a given molecular SMILES (or name) based on the groups provided in existing group-contribution methods (such as UNIFAC, Joback's method and SAFT-$\gamma$ Mie). Additional functionalities have been provided to automatically identify and propose new groups.
 
+Group-contribution approaches are vital when it comes to computer-aided molecular design (CAMD) of, for example, novel refrigerants or in drug discovery, where their ability to accurately predict physical properties for new species aids in evaluating the performance of a hypothetical molecule. Here, the assignment of groups must be done thousands of times and, in some cases, for rather complex molecules. This is the primary motivator for the development of GCIdentifier.
+
 The documentation is laid out as follows:
 
 - **Group Assignment**: Find out how to assign groups to a species within a group-contribution method.
