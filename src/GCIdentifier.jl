@@ -22,9 +22,9 @@ include("database/database.jl")
 
 Given a molecule name and a group list (`groups::Vector{GCPair}`), returns a list of groups and their corresponding amount.
 
-If `connectivity` is true, then it will additionally return a vector containing the amount of bonds between each pair.
+If `connectivity` is `true`, then it will additionally return a vector containing the amount of bonds between each pair.
 
-Note: Can only be used if ChemicalIdentifiers is also called.
+Note: Can only be used if the ChemicalIdentifiers package is also installed and loaded (`using ChemicalIdentifiers`).
 
 ## Examples
 
