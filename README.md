@@ -2,6 +2,7 @@
 [![codecov](https://codecov.io/gh/ClapeyronThermo/GCIdentifier.jl/branch/master/graph/badge.svg?token=ZVGGR4AAFB)](https://codecov.io/gh/ClapeyronThermo/GCIdentifier.jl)
 [![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://clapeyronthermo.github.io/GCIdentifier.jl/dev)
 [![project chat](https://img.shields.io/badge/zulip-join_chat-brightgreen.svg)](https://julialang.zulipchat.com/#narrow/stream/265161-Clapeyron.2Ejl)
+[![DOI](https://zenodo.org/badge/595426258.svg)](https://zenodo.org/badge/latestdoi/595426258)
 
 # GCIdentifier.jl
 
