@@ -1,0 +1,17 @@
+{
+    "title": "GCIdentifier.jl: A Julia package for identifying molecular fragments from SMILES",
+    "creators": [{
+        "name": "Walker, Pierre J.",
+        "affiliation": "Division of Chemistry and Chemical Engineering, California Institute of Technology, Pasadena, California 91125, United States",
+        "orcid": "0000-0001-8628-6561"
+    }, {
+        "name": "Riedemann, Andrés",
+        "affiliation": "Departamento de Ingeniería Química, Universidad de Concepción, Concepción 4030000, Chile"
+    }, {
+        "name": "Wang, Zhen-Gang",
+        "affiliation": "Division of Chemistry and Chemical Engineering, California Institute of Technology, Pasadena, California 91125, United States"
+    }],
+    "description": "Welcome to GCIdentifier! This module provides utilities needed to fragment a given molecular SMILES (or name) based on the groups provided in existing group-contribution methods (such as UNIFAC, Joback's method, etc.). Additional functionalities have been provided to automatically identify and propose new groups.",
+    "access_right": "open",
+    "license": "MIT"
+  }
