@@ -15,6 +15,7 @@ authors:
     affiliation: 3
   - name: Zhen-Gang Wang
     affiliation: 1
+    orcid: 0000-0002-3361-6114
 affiliations:
  - name: Division of Chemistry and Chemical Engineering, California Institute of Technology, Pasadena, California 91125, United States
    index: 1
