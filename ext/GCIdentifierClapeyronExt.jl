@@ -10,5 +10,6 @@ GC.get_grouplist(::Type{T}) where T <: Clapeyron.UNIFAC = GC.UNIFACGroups
 GC.get_grouplist(::Type{T}) where T <: Clapeyron.SAFTgammaMie = GC.SAFTgammaMieGroups
 GC.get_grouplist(::Type{T}) where T <: Clapeyron.JobackIdeal = GC.JobackGroups
 GC.get_grouplist(::Type{T}) where T <: Clapeyron.HomogcPCPSAFT = GC.gcPPCSAFTGroups
+GC.get_grouplist(::Type{T}) where T <: Clapeyron.HeterogcPCPSAFT = GC.gcPPCSAFTGroups
 
 end #module
