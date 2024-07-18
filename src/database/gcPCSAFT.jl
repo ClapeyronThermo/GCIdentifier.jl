@@ -1,4 +1,4 @@
-gcPCSAFTGroups = [
+const gcPCSAFTGroups = [
     GCPair(raw"[CX4H3]", "CH3"),
     GCPair(raw"[!R;CX4H2]", "CH2"),
     GCPair(raw"[!R;CX4H]", "CH"),
