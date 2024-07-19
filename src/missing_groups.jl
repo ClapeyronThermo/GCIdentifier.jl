@@ -35,7 +35,12 @@ function find_missing_groups_from_smiles(smiles, groups=nothing; max_group_size=
     if isnothing(groups)
         missing_atoms = ones(Bool, length(atoms))
     else
-        smatches_idx_expanded, atom_coverage = find_covered_atoms(mol, groups, atoms, __bonds, false)
+        if count(first_group_order,groups) == length(groups)
+            first_order_groups = groups
+        else
+            first_order_groups = filter(x -> group_order(x) == 1, groups)
+        end
+        smatches_idx_expanded, atom_coverage = find_covered_atoms(mol, first_order_groups, atoms, __bonds, false)
         missing_atoms = (sum(atom_coverage, dims=1) .== 0)[:]
     end
 
