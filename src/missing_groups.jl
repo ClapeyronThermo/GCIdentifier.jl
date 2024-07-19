@@ -83,11 +83,10 @@ function find_missing_groups_from_smiles(smiles, groups=nothing; max_group_size=
 
     if max_group_size == 1
         unique_smarts = unique(smarts)
-        unique_names = []
+        unique_names = String[]
         for i in 1:length(unique_smarts)
-            push!(unique_names, names[findall(x->x==unique_smarts[i], smarts)[1]])
+            push!(unique_names, names[findall(isequal(unique_smarts[i]), smarts)[1]])
         end
-    
         new_groups = [GCPair(unique_smarts[i], unique_names[i]) for i in 1:length(unique_smarts)]
 
         return new_groups
@@ -184,7 +183,7 @@ function find_missing_groups_from_smiles(smiles, groups=nothing; max_group_size=
         unique_smarts = unique(smarts)
     end
     # find the names of the unique smarts
-    unique_names = []
+    unique_names = String[]
     occurrence = zeros(Int, length(unique_smarts))
     for i in 1:length(unique_smarts)
         push!(unique_names, names[findall(x->x==unique_smarts[i], smarts)[1]])
