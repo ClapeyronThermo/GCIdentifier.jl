@@ -14,7 +14,8 @@ gcPCSAFTGroups = [
     GCPair(raw"[cX3;H1]", "aCH"),
     GCPair(raw"[cX3;H0]", "aCH"),
     GCPair(raw"[OX2H;!$([OX2H]-[#6]=[O]);!$([OX2H]-a)]", "OH"),
-    GCPair(raw"[NX3H2]", "NH2")
+    GCPair(raw"[NX3H2]", "NH2"),
+    GCPair(raw"[O;H2]", "H2O")
     ]
 
 export gcPCSAFTGroups

@@ -223,28 +223,30 @@ function get_expanded_groups(mol, groups, atoms, __bonds, check)
         # remove columns with only zeros
         bond_mat_overlap = bond_mat_overlap[:, any(bond_mat_overlap .> 0, dims=1)[:]]
         # Generate all possible combinations of groups which cover all atoms
-        candidate = []
-        for i in 1:size(bond_mat_overlap, 1)
-            combs = combinations(1:size(bond_mat_overlap, 1), i)
-            for comb in combs
-                # Test if the combination of groups covers all atoms
-                if sum(bond_mat_overlap[comb, :], dims=1) == ones(Int64, 1, size(bond_mat_overlap, 2))
-                    push!(candidate, comb)
-                end
-            end
-            # For the first combination that covers all atoms, stop (since it will use the fewest groups)
-            if length(candidate) > 0
+        i = 1
+        while sum(bond_mat_overlap, dims=1) != ones(Int64, 1, size(bond_mat_overlap, 2))
+            if i > length(overlap_groups)
+                error("Could not find all groups for "*smiles)
                 break
             end
+            # for group i, check which other groups it's overlapping with
+            overlapping_group_i = findall((sum(bond_mat_overlap[:,bond_mat_overlap[i, :].==1], dims=2).>=1 .&& 1:size(bond_mat_overlap,1).!==i)[:])
+            # for each of those groups, check if they can be removed (i.e. do all of their atoms have overlaps)
+            can_remove = zeros(Bool, length(overlapping_group_i))
+            for j in 1:length(overlapping_group_i)
+                covered_atoms_j = sum(bond_mat_overlap[:,bond_mat_overlap[overlapping_group_i[j], :].==1], dims =1) .> 1
+                if all(covered_atoms_j)
+                    can_remove[j] = true
+                end
+            end
+        
+            if all(can_remove)
+                bond_mat_overlap = bond_mat_overlap[setdiff(1:size(bond_mat_overlap, 1), overlapping_group_i), :]
+                overlap_groups = overlap_groups[setdiff(1:length(overlap_groups), overlapping_group_i)]
+            end
+            i += 1
         end
-        # Select the groups that cover the most atoms
-        if length(candidate) > 1
-            @warn "Multiple combinations of groups cover all atoms. Selecting the first one."
-        elseif length(candidate) == 0
-            error("Could not find all groups for "*smiles)
-        end
-        best_comb = overlap_groups[candidate[1]]
-        push!(non_overlap_groups, best_comb...)
+        push!(non_overlap_groups, overlap_groups...)
     end
 
     bond_mat_minimum = bond_mat[non_overlap_groups, :]
