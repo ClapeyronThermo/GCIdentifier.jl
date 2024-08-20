@@ -1,4 +1,4 @@
-ogUNIFACGroups = [GCPair(raw"[CX4;H3;!R]","CH3"),
+const ogUNIFACGroups = [GCPair(raw"[CX4;H3;!R]","CH3"),
 GCPair(raw"[CX4;H2;!R]","CH2"),
 GCPair(raw"[CX4;H1;!R]","CH"),
 GCPair(raw"[CX4;H0;!R]","C"),

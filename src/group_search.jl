@@ -1,20 +1,24 @@
 
 """
-    GCPair
+    GCPair(smarts,name;group_order = 1)
 
-Struct used to hold a description of a group. contains the SMARTS string necessary to match the group within a SMILES query, and the assigned name.
-
+Struct used to hold a description of a group. Contains the SMARTS string necessary to match the group within a SMILES query, and the assigned name.
+the `group_order` parameter is used for groups that follow a Constantinou-Gani approach: the list of `GCPair` with `group_order = 1` will be matched with strict coverage (failing if there is missing atoms to cover) while second order groups and above will not be stringly checked for total coverage. Each order group will be matched independendly.
 """
 struct GCPair
     smarts::String
     name::String
+    group_order::Int
 end
+
+GCPair(smarts,name;group_order = 1) = GCPair(smarts,name,group_order)
 
 export GCPair
 
 smarts(x::GCPair) = x.smarts
 name(x::GCPair) = x.name
-
+group_order(x::GCPair) = x.group_order
+first_group_order(x::GCPair) = x.group_order == 1
 #sorting comparison between 2 smatches
 function _isless_smatch(smatch1,smatch2)
     #fallback, if one is not matched, throw to the end
@@ -87,7 +91,7 @@ function get_grouplist end
 get_grouplist(x::Vector{GCPair}) = x
 
 """
-    get_groups_from_smiles(smiles::String,groups;connectivity = false)
+    get_groups_from_smiles(smiles::String,groups;connectivity = false,check = true)
 
 Given a SMILES string and a group list (`groups::Vector{GCPair}`), returns a list of groups and their corresponding amount.
 
@@ -103,23 +107,48 @@ julia> get_groups_from_smiles("CCO",JobackGroups,connectivity = true)
 ("CCO", ["-CH3" => 1, "-CH2-" => 1, "-OH (alcohol)" => 1], [("-CH3", "-CH2-") => 1, ("-CH2-", "-OH (alcohol)") => 1])
 ```
 """
-function get_groups_from_smiles(smiles::String,groups;connectivity = false)
+function get_groups_from_smiles(smiles::String,groups;connectivity = false,check = true)
     groups = get_grouplist(groups)
-    return get_groups_from_smiles(smiles,groups;connectivity = connectivity)
+    count(first_group_order,groups) == length(groups) && return _get_groups_from_smiles(smiles,groups,connectivity,check)
+    group_orders = group_order.(groups) |> unique! |> sort!
+    
+    #find all group orders, perform a match for each order, then join the results.
+    conectivity_result = Vector{Pair{Tuple{String,String},Int}}[]
+    results = Tuple{String,Vector{Pair{String,Int}}}[]
+    for order in group_orders
+        groups_n = filter(x -> group_order(x) == order,groups)
+        if order == 1
+            result1 = _get_groups_from_smiles(smiles,groups_n,connectivity,check)
+            if connectivity
+                push!(conectivity_result,result1[3])
+            end
+            push!(results,(result1[1],result1[2]))
+        else
+            result_n = _get_groups_from_smiles(smiles,groups_n,false,false)
+            push!(results,result_n)
+        end
+    end
+
+    gc_pairs = mapreduce(last,vcat,results)
+    smiles_res = results[1][1]
+    if connectivity
+        return (smiles_res,gc_pairs,reduce(vcat,conectivity_result[1]))
+    else
+        return (smiles_res,gc_pairs)
+    end
 end
 
-function get_groups_from_smiles(smiles::String,groups::Vector{GCPair};connectivity=false,check = true)
+function _get_groups_from_smiles(smiles::String,groups::Vector{GCPair},connectivity=false,check = true)
     mol = get_mol(smiles)
     atoms = get_atoms(mol)
     natoms = length(atoms)
     __bonds = __getbondlist(mol)
-
     group_id_expanded, bond_mat_minimum = get_expanded_groups(mol, groups, atoms, __bonds, check)
 
     group_id = unique(group_id_expanded)
     group_occ_list = [sum(group_id_expanded .== i) for i in group_id]
 
-    gcpairs = [name(groups[group_id[i]]) => group_occ_list[i] for i in 1:length(group_id)]   
+    gcpairs = [name(groups[group_id[i]]) => group_occ_list[i] for i in 1:length(group_id)]
 
     if check
         if sum(bond_mat_minimum) != natoms
@@ -135,7 +164,7 @@ function get_groups_from_smiles(smiles::String,groups::Vector{GCPair};connectivi
 end
 
 function find_covered_atoms(mol, groups, atoms, __bonds, check)
-    smatches = []
+    smatches = Vector{Dict{String, Vector{Int64}}}[]
     smatches_idx = Int[]
 
     #step 0.a, find all groups that could get a match
@@ -146,7 +175,6 @@ function find_covered_atoms(mol, groups, atoms, __bonds, check)
             push!(smatches_idx,i)
         end
     end
-
     #step 0.b, sort the matches by the amount of matched atoms. biggest groups come first.
     perm = sortperm(smatches,lt = _isless_smatch,rev = true)
     smatches = smatches[perm]
@@ -162,8 +190,9 @@ function find_covered_atoms(mol, groups, atoms, __bonds, check)
     # Create a matrix with the atoms that are in each group
     bond_mat = zeros(Int64, ngroups, natoms)
     for i in 1:ngroups
-        for j in 1:length(smatches_expanded[i]["atoms"])
-            bond_mat[i, smatches_expanded[i]["atoms"][j]+1] = 1
+        smatches_expanded_i_atoms = smatches_expanded[i]["atoms"]
+        for j in 1:length(smatches_expanded_i_atoms)
+            bond_mat[i, smatches_expanded_i_atoms[j]+1] = 1
         end
     end
     if check
