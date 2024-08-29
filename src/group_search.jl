@@ -143,7 +143,7 @@ function _get_groups_from_smiles(smiles::String,groups::Vector{GCPair},connectiv
     atoms = get_atoms(mol)
     natoms = length(atoms)
     __bonds = __getbondlist(mol)
-    group_id_expanded, bond_mat_minimum = get_expanded_groups(mol, groups, atoms, __bonds, check)
+    group_id_expanded, bond_mat_minimum = get_expanded_groups(mol, groups, atoms, __bonds, check, smiles)
 
     group_id = unique(group_id_expanded)
     group_occ_list = [sum(group_id_expanded .== i) for i in group_id]
@@ -236,7 +236,7 @@ function get_connectivity(mol,group_id,groups)
     return connectivity
 end
 
-function get_expanded_groups(mol, groups, atoms, __bonds, check)
+function get_expanded_groups(mol, groups, atoms, __bonds, check, smiles)
     smatches_idx_expanded, bond_mat = find_covered_atoms(mol, groups, atoms, __bonds, check)
     # Find all atoms that are in more than one group
     overlap = findall(sum(bond_mat, dims=1)[:] .> 1)
