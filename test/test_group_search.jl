@@ -88,6 +88,11 @@ test_gcmatch(groups) = (smiles,result) -> test_gcmatch(groups,smiles,result)
     #carboxylic acids
     unifac("CC(=O)O",gcstring"CH3:1;COOH:1") #acetic acid
 
+    #cyclic ethers
+    unifac("C1OCOCO1",gcstring"TRIOXAN:3")
+    unifac("C1OCOCC1",gcstring"CY-CH2:1;CY-CH2O:2")
+    unifac("C1OCCC1",gcstring"CY-CH2:2;THF:1")
+
     #non-unique group assignment
     unifac("c1ccccc1COCCOCC",gcstring"ACH:5;ACCH2:1;CH2O:2;CH2:1;CH3:1")
 end

@@ -9,9 +9,10 @@ struct GCPair
     smarts::String
     name::String
     group_order::Int
+    multiplicity::Int
 end
 
-GCPair(smarts,name;group_order = 1) = GCPair(smarts,name,group_order)
+GCPair(smarts,name;group_order = 1, multiplicity = 1) = GCPair(smarts,name,group_order,multiplicity)
 
 export GCPair
 
@@ -148,7 +149,7 @@ function _get_groups_from_smiles(smiles::String,groups::Vector{GCPair},connectiv
     group_id = unique(group_id_expanded)
     group_occ_list = [sum(group_id_expanded .== i) for i in group_id]
 
-    gcpairs = [name(groups[group_id[i]]) => group_occ_list[i] for i in 1:length(group_id)]
+    gcpairs = [name(groups[group_id[i]]) => group_occ_list[i]*groups[group_id[i]].multiplicity for i in 1:length(group_id)]
 
     if check
         if sum(bond_mat_minimum) != natoms
