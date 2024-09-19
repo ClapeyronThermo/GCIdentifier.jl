@@ -29,7 +29,11 @@ GCPair(raw"[OX2H]-[C](=O)[cH0]","aCCOOH"),
 GCPair(raw"[cH0][NH1;!R][cH0]","aCNHaC"),
 GCPair(raw"[CH3][CX3](=O)","CH3CO"),
 GCPair(raw"[OH0;!R;$([OH0;!R][CH3;!R]);$([OH0;!R][CH2;!R])]","eO"),
-GCPair(raw"[OH0;!R;$([OH0;!R][CH2;!R])]","cO")
+GCPair(raw"[OH0;!R;$([OH0;!R][CH2;!R])]","cO"),
+GCPair(raw"[CX4;H3][OX2;H1]","CH3OH"),
+GCPair(raw"[OH2]","H2O"),
+GCPair(raw"[CH4]","CH4"),
+GCPair(raw"[C;X2](=O)(=O)","CO2"),
 ]
 
 export SAFTgammaMieGroups
