@@ -103,13 +103,19 @@ end
     (component, groups, connectivity) = get_groups_from_smiles(smiles, gcPPCSAFTGroups; connectivity=true)
 
     @test isequal(["CH2" => 7, "aCH" => 5, "CH3" => 3, "aC" => 1, "C" => 1] |> Set,Set(groups))
-    @test isequal([("aCH", "aCH") => 4, ("CH2", "C") => 2, ("C", "aC") => 1, ("aCH", "aC") => 2, ("CH3", "CH2") => 3, ("CH2", "CH2") => 5, ("CH3", "C") => 1] |> Set,Set(connectivity))
+    @test isequal([("aCH", "aCH") => 4, ("CH2", "C") => 2, ("C", "aC") => 1, ("aCH", "aC") => 2, ("CH3", "CH2") => 2, ("CH2", "CH2") => 5, ("CH3", "C") => 1] |> Set,Set(connectivity))
 
     # Test case where order matters
-    # Test a highly branched hydrocarbon
     smiles = "CC(=O)OC"
     (component, groups, connectivity) = get_groups_from_smiles(smiles, gcPPCSAFTGroups; connectivity=true)
 
     @test isequal(["CH3" => 2, "COO" => 1] |> Set,Set(groups))
     @test isequal([("CH3", "COO") => 2] |> Set,Set(connectivity))
+
+    # Test case where there is overlap between groups
+    smiles = "C(COCCOCCOCCOCCO)O"
+    (component, groups, connectivity) = get_groups_from_smiles(smiles, gcPPCSAFTGroups; connectivity=true)
+
+    @test isequal(["CH2" => 6, "OH" => 2, "OCH2" => 4] |> Set,Set(groups))
+    @test isequal([("CH2", "CH2") => 2, ("CH2", "OH") => 2, ("CH2", "OCH2") => 6, ("OCH2", "OCH2") => 1] |> Set,Set(connectivity))
 end

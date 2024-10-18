@@ -158,7 +158,7 @@ function _get_groups_from_smiles(smiles::String,groups::Vector{GCPair},connectiv
     end
 
     if connectivity
-        return (smiles,gcpairs,get_connectivity(mol,group_id,groups))
+        return (smiles,gcpairs,get_connectivity(mol,group_id,group_id_expanded,groups, bond_mat_minimum, __bonds))
     else
         return (smiles,gcpairs)
     end
@@ -204,33 +204,38 @@ function find_covered_atoms(mol, groups, atoms, __bonds, check)
     return smatches_idx_expanded, bond_mat
 end
 
-function get_connectivity(mol,group_id,groups)
+function get_connectivity(mol, group_id, group_id_expanded, groups, mapping, bondlist)
     ngroups = length(group_id)
     A = zeros(ngroups,ngroups)
     connectivity = Pair{NTuple{2,String},Int}[]
-    for i in 1:ngroups
-        gci = groups[group_id[i]]
-        smart1 = smarts(gci)
-        smart2 = smarts(gci)
-        querie = get_qmol(smart1*smart2)
-        smatch = get_substruct_matches(mol,querie)
-        name_i = name(gci)
-        A[i,i] = length(unique(smatch))
-        if A[i,i]!=0
-            append!(connectivity,[(name_i,name_i)=>Int(A[i,i])])
-        end
 
-        for j in i+1:ngroups
-            gcj = groups[group_id[j]]
-            smart2 = smarts(gcj)
-            querie = get_qmol(smart1*smart2)
-            smatch = get_substruct_matches(mol,querie)
-            querie = get_qmol(smart2*smart1)
-            append!(smatch,get_substruct_matches(mol,querie))
-            A[i,j] = length(unique(smatch))
-            name_j = name(gcj)
-            if A[i,j]!=0
-                append!(connectivity,[(name_i,name_j)=>Int(A[i,j])])
+    bond_mat = zeros(Int64, size(mapping,1), size(mapping,1))
+
+    for i in 1:length(bondlist)
+        bond = bondlist[i]
+        group_1 = mapping[:,bond[1]].==1
+        group_2 = mapping[:,bond[2]].==1
+        if group_1 == group_2
+            continue
+        else
+            gc1 = group_id_expanded[group_1]
+            gc2 = group_id_expanded[group_2]
+            idx1 = group_id .== gc1
+            idx2 = group_id .== gc2
+            A[idx1,idx2] .+= 1
+            bond_mat[group_1, group_2] .+= 1
+            bond_mat[group_2, group_1] .+= 1
+        end
+    end
+
+    for i in 1:ngroups
+        for j in i:ngroups
+            if A[i,j] != 0 || A[j,i] != 0
+                if i != j 
+                    append!(connectivity,[(name(groups[group_id[i]]),name(groups[group_id[j]]))=>Int(A[i,j]+A[j,i])])
+                else
+                    append!(connectivity,[(name(groups[group_id[i]]),name(groups[group_id[j]]))=>Int(A[i,j])])
+                end
             end
         end
     end
@@ -348,4 +353,12 @@ function group_replace(grouplist,group_keys...)
     return [k => v for (k,v) in pairs(res)]
 
 end
+
+# function check_coverage(smiles, groups)
+#     mol = get_mol(smiles)
+#     atoms = get_atoms(mol)
+#     __bonds = __getbondlist(mol)
+#     group_id_expanded, bond_mat_minimum = get_expanded_groups(mol, groups, atoms, __bonds, true, smiles)
+#     return true
+# end
 export get_groups_from_name, get_groups_from_smiles, group_replace
