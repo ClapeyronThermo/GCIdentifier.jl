@@ -37,7 +37,7 @@ jobs:
       - uses: julia-actions/julia-buildpkg@v1
       - uses: julia-actions/julia-runtest@v1
         if: matrix.version == '1' && matrix.os == 'ubuntu-latest'
-      - uses: codecov/codecov-action@v4
+      - uses: codecov/codecov-action@v5
         if: matrix.version == '1' && matrix.os == 'ubuntu-latest'
         with:
           # possibly other stuff
