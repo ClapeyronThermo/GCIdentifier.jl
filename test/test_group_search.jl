@@ -33,8 +33,8 @@ test_gcmatch(groups) = (smiles,result) -> test_gcmatch(groups,smiles,result)
     unifac("CC(C)c1ccccc1",gcstring"ACH:5;ACCH:1;CH3:2") #cumene
 
     #alcohol
-    unifac("CC(O)C",gcstring"CH3:2;CH:1;OH(S):1") #2-propanol
-    unifac("CCO",gcstring"CH3:1;CH2:1;OH(P):1") #ethanol
+    unifac("CC(O)C",gcstring"CH3:2;CH:1;OH (S):1") #2-propanol
+    unifac("CCO",gcstring"CH3:1;CH2:1;OH (P):1") #ethanol
 
     #methanol
     unifac("CO",gcstring"CH3OH:1") #methanol
