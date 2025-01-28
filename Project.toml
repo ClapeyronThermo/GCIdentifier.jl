@@ -1,7 +1,7 @@
 name = "GCIdentifier"
 uuid = "b7ea765e-cbac-4e4a-9b0d-5427cc302506"
 authors = ["Pierre Walker <pjwalker@caltech.edu>", "Andrés Riedemann <andres.riedemann@gmail.com>"]
-version = "0.3.7"
+version = "0.3.8"
 
 [deps]
 ChemicalIdentifiers = "fa4ea961-1416-484e-bda2-883ee1634ba5"
