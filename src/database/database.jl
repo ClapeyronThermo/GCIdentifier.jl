@@ -1,5 +1,6 @@
 include("Joback.jl")
 include("SAFTgammaMie.jl")
+include("chemeo_groups.jl")
 include("ogUNIFAC.jl")
 include("UNIFAC.jl")
 include("gcPCSAFT.jl")
