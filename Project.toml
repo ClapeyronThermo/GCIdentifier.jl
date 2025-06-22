@@ -21,7 +21,7 @@ GCIdentifierClapeyronExt = "Clapeyron"
 ChemicalIdentifiers = "0.1"
 Clapeyron = "0.4,0.5,0.6"
 Combinatorics = "1"
-MolecularGraph = "0.14,0.15,0.16,0.17,0.18, 0.19"
+MolecularGraph = "0.14,0.15,0.16,0.17,0.18,0.19,0.20"
 julia = "1.6"
 
 [extras]
