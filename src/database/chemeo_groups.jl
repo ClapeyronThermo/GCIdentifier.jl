@@ -16,7 +16,7 @@ const SAFTgammaMieChemeoGroups = [
     GCPair(raw"[CX4;H1;!R][OH1]", "CHOH"),
     GCPair(raw"[NX3H2]", "NH2"),
     GCPair(raw"[NX3H1;!R]", "NH"),
-    GCPair(raw"[#7X3H0;!$([#7](~O)~O)]", "N"),
+    GCPair(raw"[#7X3H0;!$([#7](~O)~O);!R]", "N"),
     GCPair(raw"[#7X3H1;R]", "cNH"),
     GCPair(raw"[#7X3H0;R]", "cN"),
     GCPair(raw"[!R;CX3H0;!$([CX3H0](=O))]", "CH="),
