@@ -10,7 +10,7 @@ split_2(str) = NTuple{2}(eachsplit(str, limit=2))
 split_2(str,dlm) = NTuple{2}(eachsplit(str,dlm, limit=2))
 
 #TODO: windows support with MolecularGraph
-import MolecularGraph
+import MolecularGraph, Graphs
 
 include("prelude.jl")
 include("group_search.jl")

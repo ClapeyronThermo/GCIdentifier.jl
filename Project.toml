@@ -1,12 +1,13 @@
 name = "GCIdentifier"
 uuid = "b7ea765e-cbac-4e4a-9b0d-5427cc302506"
-authors = ["Pierre Walker <pjwalker@caltech.edu>", "Andrés Riedemann <andres.riedemann@gmail.com>"]
 version = "0.3.11"
+authors = ["Pierre Walker <pjwalker@caltech.edu>", "Andrés Riedemann <andres.riedemann@gmail.com>"]
 
 [deps]
 ChemicalIdentifiers = "fa4ea961-1416-484e-bda2-883ee1634ba5"
 Clapeyron = "7c7805af-46cc-48c9-995b-ed0ed2dc909a"
 Combinatorics = "861a8166-3701-5b0c-9a16-15d98fcdc6aa"
+Graphs = "86223c79-3864-5bf0-83f7-82e725a168b6"
 MolecularGraph = "6c89ec66-9cd8-5372-9f91-fabc50dd27fd"
 
 [weakdeps]
@@ -21,6 +22,7 @@ GCIdentifierClapeyronExt = "Clapeyron"
 ChemicalIdentifiers = "0.1"
 Clapeyron = "0.4,0.5,0.6"
 Combinatorics = "1"
+Graphs = "1.13.4"
 MolecularGraph = "0.14 - 0.22"
 julia = "1.6"
 

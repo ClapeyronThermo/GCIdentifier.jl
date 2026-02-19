@@ -45,7 +45,7 @@ function find_missing_groups_from_smiles(smiles, groups=nothing; max_group_size=
     end
 
     atom_type = string.(MolecularGraph.atom_symbol(mol))
-    graph = MolecularGraph.to_dict(mol)["graph"]
+    graph = [[Graphs.src(e), Graphs.dst(e)] for e in Graphs.edges(mol)]
     bond_mat = zeros(Int, length(atom_type), length(atom_type))
     for i in 1:length(graph)
         bond_mat[graph[i][1], graph[i][2]] = MolecularGraph.props(mol, graph[i][1], graph[i][2]).order
