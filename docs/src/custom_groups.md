@@ -1,4 +1,5 @@
 # Defining Custom Groups
+
 Within GCIdentifier, we support the following group-contribution methods:
 * Joback's Method (`JobackGroups`)
 * Original UNIFAC (`ogUNIFACGroups`)
@@ -7,6 +8,7 @@ Within GCIdentifier, we support the following group-contribution methods:
 * gcPCP-SAFT (`gcPCPSAFTGroups`)
 * SAFT-$\gamma$ Mie (`SAFTgammaMieGroups`)
 * SAFT-$\gamma$ Mie, generated from the Chemeo database (`SAFTgammaMieChemeoGroups`)
+* GC-Aly-Lee groups for ideal gas heat capacity (`Burkhardt2025Groups`)
 
 There are many more available that we have yet to implement. If you wish do so yourself, then all that needs to be done is define a vector of `GCPair`s. `GCPair` is a struct contain the group SMARTS and name:
 ```julia
