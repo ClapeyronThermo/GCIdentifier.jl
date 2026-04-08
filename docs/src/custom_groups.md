@@ -2,6 +2,7 @@
 
 Within GCIdentifier, we support the following group-contribution methods:
 * Joback's Method (`JobackGroups`)
+* (Enhanced) Predictive PR-78 (`EPPR78Groups`)
 * Original UNIFAC (`ogUNIFACGroups`)
 * (Dortmund) UNIFAC (`UNIFACGroups`)
 * gcPC-SAFT (`gcPCSAFTGroups`)
