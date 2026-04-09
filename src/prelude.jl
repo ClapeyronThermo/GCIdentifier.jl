@@ -1,4 +1,24 @@
-#we use MolecularGraph for windows, but we need the same api.
+"""
+    GCPair(smarts,name;group_order = 1)
+
+Struct used to hold a description of a group. Contains the SMARTS string necessary to match the group within a SMILES query, and the assigned name.
+The `group_order` parameter is used for groups that follow a Constantinou-Gani approach: the list of `GCPair` with `group_order = 1` will be matched with strict coverage (failing if there is missing atoms to cover) while second order groups and above will not be stringly checked for total coverage. Each order group will be matched independendly.
+"""
+struct GCPair
+    smarts::String
+    name::String
+    group_order::Int
+    multiplicity::Int
+end
+
+GCPair(smarts,name;group_order = 1, multiplicity = 1) = GCPair(smarts,name,group_order,multiplicity)
+
+export GCPair
+
+smarts(x::GCPair) = x.smarts
+name(x::GCPair) = x.name
+group_order(x::GCPair) = x.group_order
+first_group_order(x::GCPair) = x.group_order == 1
 
 function get_mol(smiles)
     mol = MolecularGraph.smilestomol(smiles)
@@ -7,6 +27,15 @@ end
 
 function get_qmol(smarts)
     return MolecularGraph.smartstomol(smarts)
+end
+
+function get_qmol(pair::GCPair)
+    try
+        return get_qmol(smarts(pair))
+    catch e
+        @error "error parsing GCPair(raw\"$(pair.smarts)\", \"$(pair.name)\")"
+        rethrow(e)
+    end
 end
 
 function get_atoms(mol)

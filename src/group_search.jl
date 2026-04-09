@@ -1,25 +1,3 @@
-
-"""
-    GCPair(smarts,name;group_order = 1)
-
-Struct used to hold a description of a group. Contains the SMARTS string necessary to match the group within a SMILES query, and the assigned name.
-The `group_order` parameter is used for groups that follow a Constantinou-Gani approach: the list of `GCPair` with `group_order = 1` will be matched with strict coverage (failing if there is missing atoms to cover) while second order groups and above will not be stringly checked for total coverage. Each order group will be matched independendly.
-"""
-struct GCPair
-    smarts::String
-    name::String
-    group_order::Int
-    multiplicity::Int
-end
-
-GCPair(smarts,name;group_order = 1, multiplicity = 1) = GCPair(smarts,name,group_order,multiplicity)
-
-export GCPair
-
-smarts(x::GCPair) = x.smarts
-name(x::GCPair) = x.name
-group_order(x::GCPair) = x.group_order
-first_group_order(x::GCPair) = x.group_order == 1
 #sorting comparison between 2 smatches
 function _isless_smatch(smatch1,smatch2)
     #fallback, if one is not matched, throw to the end
@@ -170,8 +148,7 @@ function find_covered_atoms(mol, groups, atoms, __bonds, check)
 
     #step 0.a, find all groups that could get a match
     for i in 1:length(groups)
-        query_i = get_qmol(smarts(groups[i]))
-        
+        query_i = get_qmol(groups[i])
         if has_substruct_match(mol,query_i)
             push!(smatches,get_substruct_matches(mol,query_i,__bonds))
             push!(smatches_idx,i)
