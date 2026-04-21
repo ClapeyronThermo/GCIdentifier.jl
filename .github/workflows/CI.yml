@@ -27,6 +27,9 @@ jobs:
           - macOS-latest
         arch:
           - x64
+        exclude:
+          - os: macOS-latest
+            arch: x64
         include:
           - os: macOS-latest
             arch: aarch64
