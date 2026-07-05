@@ -7,7 +7,7 @@ hero:
   name: GCIdentifier.jl
   text: Automated molecular fragmentation for group-contribution methods
   image:
-    src: /assets/logo.png
+    src: /logo.png
     alt: GCIdentifier
   tagline: Assign any SMILES to UNIFAC, Joback, SAFT-γ Mie, gcPC-SAFT and more — or propose entirely new groups
   actions:
