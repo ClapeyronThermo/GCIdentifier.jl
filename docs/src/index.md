@@ -1,17 +1,46 @@
+````@raw html
+---
+# https://vitepress.dev/reference/default-theme-home-page
+layout: home
+
+hero:
+  name: GCIdentifier.jl
+  text: Automated molecular fragmentation for group-contribution methods
+  image:
+    src: /assets/logo.png
+    alt: GCIdentifier
+  tagline: Assign any SMILES to UNIFAC, Joback, SAFT-γ Mie, gcPC-SAFT and more — or propose entirely new groups
+  actions:
+    - theme: brand
+      text: Getting started
+      link: /group_search
+    - theme: alt
+      text: View on GitHub
+      link: https://github.com/ClapeyronThermo/GCIdentifier.jl
+
+features:
+  - icon: 🧩
+    title: Group Assignment
+    details: Fragment any molecule into groups for ten supported group-contribution methods
+    link: /group_search
+
+  - icon: 🔍
+    title: Find Missing Groups
+    details: Automatically propose new groups for molecules not yet covered by existing methods
+    link: /missing_groups
+
+  - icon: ⚗️
+    title: Custom Groups
+    details: Define your own SMARTS-based groups and plug them into any supported method
+    link: /custom_groups
+---
+````
+
 ```@meta
 CurrentModule = GCIdentifier
 ```
-# GCIdentifier.jl
-Welcome to GCIdentifier! This module provides utilities needed to fragment a given molecular SMILES (or name) based on the groups provided in existing group-contribution methods (such as UNIFAC, Joback's method and SAFT-$\gamma$ Mie). Additional functionalities have been provided to automatically identify and propose new groups.
 
-Group-contribution approaches are vital when it comes to computer-aided molecular design (CAMD) of, for example, novel refrigerants or in drug discovery, where their ability to accurately predict physical properties for new species aids in evaluating the performance of a hypothetical molecule. Here, the assignment of groups must be done thousands of times and, in some cases, for rather complex molecules. This is the primary motivator for the development of GCIdentifier.
-
-The documentation is laid out as follows:
-
-- **Group Assignment**: Find out how to assign groups to a species within a group-contribution method.
-- **Finding Missing Groups**: Find out how to identify missing groups for a given species.
-- **Custom Groups**: Find out how to implement your own groups within GCIdentifier.
-- **API**: A list of all available methods.
+GCIdentifier.jl fragments a molecular SMILES (or name) into the groups defined by existing group-contribution methods — UNIFAC, Joback, SAFT-γ Mie, gcPC-SAFT and others — and can automatically propose new groups for molecules not yet covered. It is designed for high-throughput use in computer-aided molecular design (CAMD).
 
 ### Authors
 
