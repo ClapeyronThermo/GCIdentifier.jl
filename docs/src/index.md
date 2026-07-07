@@ -86,14 +86,14 @@ If you are using GCIdentifier for your research work, please cite the following:
       <img class="related-pkg-logo" src="/assets/related_clapeyron_logo.svg" alt="Clapeyron.jl" />
     </div>
     <h3 class="related-pkg-title">Clapeyron.jl</h3>
-    <p class="related-pkg-details">Provides every bulk equation of state cDFT builds its inhomogeneous functionals on top of, and is required alongside cDFT for essentially all use.</p>
+    <p class="related-pkg-details">Provides bulk equations of state to perform many thermodynamic property estimation calculations.</p>
   </a>
   <a class="related-pkg-card" href="https://clapeyronthermo.github.io/Langmuir.jl/dev/" target="_blank" rel="noreferrer">
     <div class="related-pkg-logo-wrap">
       <img class="related-pkg-logo" src="/assets/related_langmuir_logo.png" alt="Langmuir.jl" />
     </div>
     <h3 class="related-pkg-title">Langmuir.jl</h3>
-    <p class="related-pkg-details">Single- and multi-component adsorption equilibrium models, complementary to cDFT's own adsorption isotherm calculations.</p>
+    <p class="related-pkg-details">Provides single- and multi-component adsorption equilibrium models.</p>
   </a>
 </div>
 
