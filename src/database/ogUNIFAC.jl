@@ -86,6 +86,46 @@ GCPair(raw"[OX1H0;!R]=[CX3H0;R][NX3H0;R][C;!R]","NIPP"),
 GCPair(raw"[OX1H0;!R]=[CH0X3;R][NX3H0;R][CH0;!R]","NTBP"),
 GCPair(raw"[CX3H0](=[OX1H0])[NX3H2]","CONH2"),
 GCPair(raw"[OX1H0;!R]=[CX3H0;!R][NH1X3;!R][CH3;!R]","CONHCH3"),
-GCPair(raw"[CH2X4;!R][NH1X3;!R][CX3H0;!R]=[OX1H0;!R]","CONHCH2")]
+GCPair(raw"[CH2X4;!R][NH1X3;!R][CX3H0;!R]=[OX1H0;!R]","CONHCH2"),
+GCPair(raw"[CX4H0](Cl)(Cl)(Cl)F","CCL3F"),
+GCPair(raw"[CX4H0](Cl)(Cl)(F)F","CCL2F2"),
+GCPair(raw"[CX4H0](Cl)(F)(F)F","CCLF3"),
+GCPair(raw"[CX4H0](Cl)(Cl)(F)[#6]","CCL2F"),
+GCPair(raw"[CX4H0](Cl)(F)(F)[#6]","CCLF2"),
+GCPair(raw"[CX4H1](Cl)(Cl)F","HCCL2F"),
+GCPair(raw"[CX4H1](Cl)(F)F","HCCLF2"),
+GCPair(raw"[CX4H1](Cl)(F)[#6]","HCCLF"),
+GCPair(raw"[CX4;H3;!R][SX2;H0]","CH3S"),
+GCPair(raw"[CX4;H2;!R][SX2;H0]","CH2S"),
+GCPair(raw"[CX4;H1;!R][SX2;H0]","CHS"),
+GCPair(raw"[NX2H0]=[CX2H0]=[OX1]","NCO"),
+GCPair(raw"[SiX4H3]","SIH3"),
+GCPair(raw"[SiX4H2;!$([SiX4H2]O)]","SIH2"),
+GCPair(raw"[SiX4H1;!$([SiX4H1]O)]","SIH"),
+GCPair(raw"[SiX4H0;!$([SiX4H0]O)]","SI"),
+GCPair(raw"[SiX4H2]O","SIH2O"),
+GCPair(raw"[SiX4H1]O","SIHO"),
+GCPair(raw"[SiX4H0]O","SIO"),
+GCPair(raw"[CX3H0](=[OX1])[NX3H0]([CX4H3])[CX4H3]","CON(CH3)2"),
+GCPair(raw"[CX3H0](=[OX1])[NX3H0]([CX4H2])[CX4H2]","CON(CH2)2"),
+GCPair(raw"[CX3H0](=[OX1])[NX3H0]([CX4H3])[CX4H2]","CONCH3CH2"),
+GCPair(raw"[NX3;R]1[CH2;R][CH2;R][OX2;R][CH2;R][CH2;R]1","MORPH"),
+GCPair(raw"[nH]1[cH][n][cH][cH]1","IMIDAZOL"),
+GCPair(raw"[n]1[cH][cH][cH][cH][cH]1","C5H5N"),
+GCPair(raw"[n]1[cH][cH][cH][cH][c]1","C5H4N"),
+# guess (di-substituted pyridine ring; may not reliably match, see notes): verify
+GCPair(raw"[n]1[cH][cH][cH][c][c]1","C5H3N"),
+# guess (thiophene alpha-position proxy, beta substitution not distinguished): verify
+GCPair(raw"[cH][s][cH]","C4H4S"),
+# guess (thiophene alpha-position proxy, beta substitution not distinguished): verify
+GCPair(raw"[cH][s][c;H0]","C4H3S"),
+# guess (thiophene alpha-position proxy, beta substitution not distinguished): verify
+GCPair(raw"[c;H0][s][c;H0]","C4H2S"),
+# guess (sulfolane-type ring CH2 alpha to sulfone S): verify
+GCPair(raw"[CH2;R][SX4;R](=O)(=O)","(CH2)2SU"),
+# guess (open-chain sulfone CH2-SO2-CH fragment): verify
+GCPair(raw"[CX4H2][SX4](=O)(=O)[CX4H1]","CH2CHSU"),
+# guess (bis(trifluoromethylsulfonyl)imide anion): verify
+GCPair(raw"[N-]([SX4](=O)(=O)C(F)(F)F)[SX4](=O)(=O)C(F)(F)F","BTI")]
 
 export ogUNIFACGroups

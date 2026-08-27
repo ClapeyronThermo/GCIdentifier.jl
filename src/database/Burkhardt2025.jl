@@ -76,6 +76,7 @@ GCPair(raw"[$([*](-[Br,I])(-[Br,I])(-[Br,I]))]", "SO:[*]-[Br,I]3", group_order =
 GCPair(raw"[NX3H1;R]", "SO:-NH-(cyc)", group_order = 2), # SO:-NH-(cyc)
 GCPair(raw"[CX3H1;!$([CX3H1](~O)(~O))](=O)", "SO:-CH=O(aldeh)", group_order = 2), # SO:-CH=O(aldeh)
 GCPair(raw"[OH1]-[OX2H0]", "SO:HO-O-(perhydroxide)", group_order = 2), # SO:HO-O-(perhydroxide)
+GCPair(raw"[2H]", "[2H]"), # deuterium
 ]
 
 export Burkhardt2025Groups
