@@ -38,7 +38,13 @@ GCPair(raw"[#6X2]#[#7X1H0]","-CN"),
 GCPair(raw"[$([#7X3,#7X3+][!#8])](=[O])~[O-]","-NO2"),
 GCPair(raw"[SX2H]","-SH"),
 GCPair(raw"[#16X2H0;!R]","-S- (non-ring)"),
-GCPair(raw"[#16X2H0;R]","-S- (ring)")
+GCPair(raw"[#16X2H0;R]","-S- (ring)"),
+GCPair(raw"[OH2]","H2O"),
+GCPair(raw"[CX3H2]=[#6]","=CH2"),
+GCPair(raw"[CX3H1]=[#6]","=CH-"),
+GCPair(raw"[CX2H1]#[CX2H0]","C≡CH"),
+GCPair(raw"[CX4H3][OX2H0;!R;!$([OX2H0]-[#6]=[#8])]","OCH3"),
+GCPair(raw"[CX4H2][OX2H0;!R;!$([OX2H0]-[#6]=[#8])]","OCH2")
 ]
 
 export JobackGroups

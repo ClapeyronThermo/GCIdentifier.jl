@@ -89,6 +89,54 @@ GCPair(raw"[OX1H0;!R]=[CX3H0;R][NX3H0;R][C;!R]","NIPP"),
 GCPair(raw"[OX1H0;!R]=[CH0X3;R][NX3H0;R][CH0;!R]","NTBP"),
 GCPair(raw"[CX3H0](=[OX1H0])[NX3H2]","CONH2"),
 GCPair(raw"[OX1H0;!R]=[CX3H0;!R][NH1X3;!R][CH3;!R]","CONHCH3"),
-GCPair(raw"[CH2X4;!R][NH1X3;!R][CX3H0;!R]=[OX1H0;!R]","CONHCH2")]
+GCPair(raw"[CH2X4;!R][NH1X3;!R][CX3H0;!R]=[OX1H0;!R]","CONHCH2"),
+GCPair(raw"[N]#[N]","N2"),
+GCPair(raw"[cX3H1][s][cX3H1]","AC2H2S"),
+GCPair(raw"[cX3H0][s][cX3H1]","AC2HS"),
+GCPair(raw"[cX3H0][s][cX3H0]","AC2S"),
+GCPair(raw"[CX4;H3;!R][SX2;H0]","CH3S"),
+GCPair(raw"[CX4;H2;!R][SX2;H0]","CH2S"),
+GCPair(raw"[CX4;H1;!R][SX2;H0]","CHS"),
+GCPair(raw"[SX2H0][SX2H0]","-S-S-"),
+GCPair(raw"[CX4;H1][CX3;!H1](=O)","COCH"),
+GCPair(raw"[CH2;R]1[OX2;R][CH2;R]1","H2COCH2"),
+GCPair(raw"[CH2;R]1[OX2;R][CH;R]1","H2COCH"),
+GCPair(raw"[CH2;R]1[OX2;R][C;R]1","H2COC"),
+GCPair(raw"[CX3H1](=[OX1])[NX3H1][CX4H3]","HCONHCH3"),
+GCPair(raw"[CX3H1](=[OX1])[NX3H1][CX4H2]","HCONHCH2"),
+# guess (formyl attached to a fully-substituted amide N): verify
+GCPair(raw"[CX3H1](=[OX1])[NX3H0]","HCO"),
+# guess (mixed N-methyl-N-ethyl formamide): verify
+GCPair(raw"[CX3H1](=[OX1])[NX3H0]([CX4H3])[CX4H2]","HCOCH"),
+# NOTE: "AM(CH3)2", "AM(CH2)2", "AMCH3CH2" (Clapeyron group names) are intentionally
+# NOT mapped here. A naive combined-fragment SMARTS regressed the existing CH3N/CH2N
+# behavior (verified against test_group_search.jl's trimethylamine/triethylamine cases),
+# so these are left unmapped pending a correct structural definition.
+# guess (sulfolane-type ring CH2 alpha to sulfone S): verify
+GCPair(raw"[CH2;R][SX4;R](=O)(=O)","(CH2)2SU"),
+# guess (open-chain sulfone CH2-SO2-CH fragment): verify
+GCPair(raw"[CX4H2][SX4](=O)(=O)[CX4H1]","CH2SUCH"),
+# guess (dimethyl carbonate as a whole-molecule group): verify
+GCPair(raw"[CX4H3][OX2H0][CX3H0](=[OX1])[OX2H0][CX4H3]","(CH3)2CB"),
+# guess (ethyl methyl carbonate as a whole-molecule group): verify
+GCPair(raw"[CX4H3][OX2H0][CX3H0](=[OX1])[OX2H0][CX4H2][CX4H3]","CH2CH3CB"),
+# guess (ethylene carbonate ring as a whole-molecule group): verify
+GCPair(raw"[CX4H2;R]1[OX2H0;R][CX3H0;R](=[OX1])[OX2H0;R][CX4H2;R]1","(CH2)2CB"),
+GCPair(raw"[B-](F)(F)(F)F","BF4-"),
+GCPair(raw"[P-](F)(F)(F)(F)(F)F","PF6"),
+GCPair(raw"C(F)(F)(F)[SX4](=O)(=O)[O-]","OTF-"),
+GCPair(raw"[N-]([SX4](=O)(=O)C(F)(F)F)[SX4](=O)(=O)C(F)(F)F","BTI-"),
+GCPair(raw"[SX4](=[OX1])(=[OX1])([OX2H1])[OX1-]","HSO4"),
+GCPair(raw"[SX4](=[OX1])(=[OX1])([OX1-])[OX1-]","SO4"),
+# guess (unsubstituted imidazolium ring core): verify
+GCPair(raw"[n+;H0][cH][n]","C3H3N2+"),
+# guess (2-substituted imidazolium ring core): verify
+GCPair(raw"[n+;H0][c;H0][n]","C3H2N2+"),
+# guess (pyrrolidinium ring core): verify
+GCPair(raw"[NX4+;R1]1[CH2;R1][CH2;R1][CH2;R1][CH2;R1]1","C4H8N+"),
+# guess (unsubstituted pyridinium ring core): verify
+GCPair(raw"[n+;H0]1[cH][cH][cH][cH][cH]1","C5H5N+"),
+# guess (substituted pyridinium ring core): verify
+GCPair(raw"[n+;H0]1[cH][cH][cH][cH][c;H0]1","C5H4N+")]
 
 export UNIFACGroups

@@ -1,5 +1,6 @@
 Manifest.toml
 docs/build/
+docs/node_modules/
 docs/site/
 *.jl.cov
 *.jl.*.cov

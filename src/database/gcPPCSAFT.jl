@@ -19,6 +19,7 @@ GCPair(raw"[CH;D2](=O)","CH=O"),
 GCPair(raw"[#6X3H0](=[#8X1])[#8X2H0]","COO"),
 GCPair(raw"[CX4H3][OX2H0;!R;!$([OX2H0]-[#6]=[#8])]","OCH3"),
 GCPair(raw"[CX4H2][OX2H0;!R;!$([OX2H0]-[#6]=[#8])]","OCH2"),
-GCPair(raw"[CH;D2](=O)[OX2H0;!R;!$([OX2H0]-[#6]=[#8])]","HCOO")]
+GCPair(raw"[CH;D2](=O)[OX2H0;!R;!$([OX2H0]-[#6]=[#8])]","HCOO"),
+GCPair(raw"[O;H2]","H2O")]
 const gcPCPSAFTGroups = gcPPCSAFTGroups
 export gcPPCSAFTGroups, gcPCPSAFTGroups
