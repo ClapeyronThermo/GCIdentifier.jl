@@ -90,7 +90,7 @@ function get_groups_from_smiles(smiles::String,groups;connectivity = false,check
     groups = get_grouplist(groups)
     count(first_group_order,groups) == length(groups) && return _get_groups_from_smiles(smiles,groups,connectivity,check)
     group_orders = group_order.(groups) |> unique! |> sort!
-    
+
     #find all group orders, perform a match for each order, then join the results.
     conectivity_result = Vector{Pair{Tuple{String,String},Int}}[]
     results = Tuple{String,Vector{Pair{String,Int}}}[]
@@ -209,7 +209,7 @@ function get_connectivity(mol, group_id, group_id_expanded, groups, mapping, bon
     for i in 1:ngroups
         for j in i:ngroups
             if A[i,j] != 0 || A[j,i] != 0
-                if i != j 
+                if i != j
                     append!(connectivity,[(name(groups[group_id[i]]),name(groups[group_id[j]]))=>Int(A[i,j]+A[j,i])])
                 else
                     append!(connectivity,[(name(groups[group_id[i]]),name(groups[group_id[j]]))=>Int(A[i,j])])
@@ -252,7 +252,7 @@ function get_expanded_groups(mol, groups, atoms, __bonds, check, smiles)
                     can_remove[j] = true
                 end
             end
-        
+
             if all(can_remove)
                 bond_mat_overlap = bond_mat_overlap[setdiff(1:size(bond_mat_overlap, 1), overlapping_group_i), :]
                 overlap_groups = overlap_groups[setdiff(1:length(overlap_groups), overlapping_group_i)]
