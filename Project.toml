@@ -23,7 +23,7 @@ ChemicalIdentifiers = "0.1"
 Clapeyron = "0.4,0.5,0.6"
 Combinatorics = "1"
 Graphs = "1.13.4"
-MolecularGraph = "0.14 - 0.22"
+MolecularGraph = "0.14 - 0.23"
 julia = "1.6"
 
 [extras]
