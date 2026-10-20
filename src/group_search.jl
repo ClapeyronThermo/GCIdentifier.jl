@@ -39,7 +39,8 @@ function unique_groups!(groups)
     counts = zeros(Int,n)
     to_delete = fill(false,n)
     #step 1: find uniques and group those
-    for i in 1:(n-1)
+    for i in 1:n
+        to_delete[i] && continue
         str,val =groups[i]
         counts[i] = val
         for j in (i+1):n
@@ -127,7 +128,7 @@ function _get_groups_from_smiles(smiles::String,groups::Vector{GCPair},connectiv
     group_id = unique(group_id_expanded)
     group_occ_list = [sum(group_id_expanded .== i) for i in group_id]
 
-    gcpairs = [name(groups[group_id[i]]) => group_occ_list[i]*groups[group_id[i]].multiplicity for i in 1:length(group_id)]
+    gcpairs = unique_groups!([name(groups[group_id[i]]) => group_occ_list[i]*groups[group_id[i]].multiplicity for i in 1:length(group_id)])
 
     if check
         if sum(bond_mat_minimum) != natoms
@@ -136,7 +137,7 @@ function _get_groups_from_smiles(smiles::String,groups::Vector{GCPair},connectiv
     end
 
     if connectivity
-        return (smiles,gcpairs,get_connectivity(mol,group_id,group_id_expanded,groups, bond_mat_minimum, __bonds))
+        return (smiles,gcpairs,unique_groups!(get_connectivity(mol,group_id,group_id_expanded,groups, bond_mat_minimum, __bonds)))
     else
         return (smiles,gcpairs)
     end
@@ -235,36 +236,67 @@ function get_expanded_groups(mol, groups, atoms, __bonds, check, smiles)
         bond_mat_overlap = bond_mat[overlap_groups, :]
         # remove columns with only zeros
         bond_mat_overlap = bond_mat_overlap[:, any(bond_mat_overlap .> 0, dims=1)[:]]
-        # Generate all possible combinations of groups which cover all atoms
-        i = 1
-        while sum(bond_mat_overlap, dims=1) != ones(Int64, 1, size(bond_mat_overlap, 2))
-            if i > length(overlap_groups)
-                error("Could not find all groups for "*smiles)
-                break
-            end
-            # for group i, check which other groups it's overlapping with
-            overlapping_group_i = findall((sum(bond_mat_overlap[:,bond_mat_overlap[i, :].==1], dims=2).>=1 .&& 1:size(bond_mat_overlap,1).!==i)[:])
-            # for each of those groups, check if they can be removed (i.e. do all of their atoms have overlaps)
-            can_remove = zeros(Bool, length(overlapping_group_i))
-            for j in 1:length(overlapping_group_i)
-                covered_atoms_j = sum(bond_mat_overlap[:,bond_mat_overlap[overlapping_group_i[j], :].==1], dims =1) .> 1
-                if all(covered_atoms_j)
-                    can_remove[j] = true
-                end
-            end
-
-            if all(can_remove)
-                bond_mat_overlap = bond_mat_overlap[setdiff(1:size(bond_mat_overlap, 1), overlapping_group_i), :]
-                overlap_groups = overlap_groups[setdiff(1:length(overlap_groups), overlapping_group_i)]
-            end
-            i += 1
-        end
-        push!(non_overlap_groups, overlap_groups...)
+        selected = exact_cover(bond_mat_overlap)
+        isnothing(selected) && error("Could not find all groups for "*smiles)
+        append!(non_overlap_groups, overlap_groups[selected])
     end
 
     bond_mat_minimum = bond_mat[non_overlap_groups, :]
     group_id_expanded = smatches_idx_expanded[non_overlap_groups]
     return group_id_expanded, bond_mat_minimum
+end
+
+function exact_cover(M; budget = 100_000)
+    nrows, ncols = size(M)
+    rows = [findall(isone, view(M, i, :)) for i in 1:nrows]
+    cands = [findall(isone, view(M, :, c)) for c in 1:ncols]
+    covered = falses(ncols)
+    chosen = falses(nrows)
+    nodes = Ref(budget)
+    isfree(j) = !chosen[j] && !any(view(covered, rows[j]))
+    function choose!(j, v)
+        covered[rows[j]] .= v
+        chosen[j] = v
+    end
+    function propagate!(i, forced)
+        changed = true
+        while changed
+            changed = false
+            for c in 1:ncols
+                covered[c] && continue
+                nfree, jfree = 0, 0
+                for j in cands[c]
+                    if j >= i && isfree(j)
+                        nfree += 1
+                        jfree = j
+                        nfree > 1 && break
+                    end
+                end
+                nfree == 0 && return false
+                if nfree == 1
+                    choose!(jfree, true)
+                    push!(forced, jfree)
+                    changed = true
+                end
+            end
+        end
+        return true
+    end
+    function dfs(i)
+        (nodes[] -= 1) < 0 && return false
+        forced = Int[]
+        if propagate!(i, forced)
+            all(covered) && return true
+            k = findnext(isfree, 1:nrows, i)
+            choose!(k, true)
+            dfs(k + 1) && return true
+            choose!(k, false)
+            dfs(k + 1) && return true
+        end
+        foreach(j -> choose!(j, false), forced)
+        return false
+    end
+    return dfs(1) ? findall(chosen) : nothing
 end
 
 #TODO: move this to Clapeyron?
