@@ -22,6 +22,7 @@ first_group_order(x::GCPair) = x.group_order == 1
 
 function get_mol(smiles)
     mol = MolecularGraph.smilestomol(smiles)
+    MolecularGraph.remove_all_hydrogens!(mol)
     return mol
 end
 
